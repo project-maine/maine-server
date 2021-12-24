@@ -1,4 +1,4 @@
-.mwb
+*.mwb
 
 HELP.md
 .gradle
