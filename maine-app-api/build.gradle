@@ -1,0 +1,16 @@
+bootJar {
+    enabled = true
+}
+jar {
+    enabled = true
+}
+
+dependencies {
+    implementation project(':maine-common-config')
+    implementation project(':maine-common-core')
+
+    implementation('org.springframework.boot:spring-boot-starter-web') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-undertow'
+}

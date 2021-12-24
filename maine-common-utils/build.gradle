@@ -1,0 +1,18 @@
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+
+dependencies {
+    // https://mvnrepository.com/artifact/commons-codec/commons-codec
+    implementation 'commons-codec:commons-codec:1.15'
+}
+
+//test {
+//    useJUnitPlatform()
+//}
+
