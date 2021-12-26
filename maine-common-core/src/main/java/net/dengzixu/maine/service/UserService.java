@@ -2,6 +2,7 @@ package net.dengzixu.maine.service;
 
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
+import net.dengzixu.maine.exception.user.SMSCodeErrorException;
 import net.dengzixu.maine.exception.user.UserNotFoundException;
 
 public interface UserService {
@@ -22,4 +23,14 @@ public interface UserService {
      * @return User
      */
     User loginByPhoneAndPassword(String phone, String password) throws UserNotFoundException;
+
+    /**
+     * 登录 验证码
+     *
+     * @param phone 手机号
+     * @param code  验证码
+     * @return User
+     * @throws SMSCodeErrorException 验证码错误
+     */
+    User loginBySMSCode(String phone, String code) throws SMSCodeErrorException;
 }

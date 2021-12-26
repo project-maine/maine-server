@@ -3,10 +3,14 @@ package net.dengzixu.maine.web.api.v1;
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.entity.bo.UserLoginBO;
 import net.dengzixu.maine.entity.bo.UserRegisterBO;
+import net.dengzixu.maine.entity.bo.UserSMSLoginBO;
+import net.dengzixu.maine.entity.bo.UserSendSMSBO;
 import net.dengzixu.maine.entity.vo.UserLoginVO;
 import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
+import net.dengzixu.maine.exception.user.SMSCodeErrorException;
 import net.dengzixu.maine.exception.user.UserNotFoundException;
 import net.dengzixu.maine.model.APIResultMap;
+import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,15 +33,18 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
+    private final CommonService commonService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, CommonService commonService) {
         this.userService = userService;
+        this.commonService = commonService;
     }
 
+
     @PostMapping("/register/phone")
-    public ResponseEntity<Map<String, Object>> register(@Validated @RequestBody UserRegisterBO userRegisterBO,
-                                                        BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> registerByPhone(@Validated @RequestBody UserRegisterBO userRegisterBO,
+                                                               BindingResult bindingResult) {
 
         // 数据校验
         if (bindingResult.hasErrors()) {
@@ -59,8 +66,8 @@ public class UserController {
     }
 
     @PostMapping("/login/password")
-    public ResponseEntity<Map<String, Object>> login(@Validated @RequestBody UserLoginBO userLoginBO,
-                                                     BindingResult bindingResult) {
+    public ResponseEntity<Map<String, Object>> loginByPhoneAndPassword(@Validated @RequestBody UserLoginBO userLoginBO,
+                                                                       BindingResult bindingResult) {
         // 数据校验
         if (bindingResult.hasErrors()) {
             return ResponseEntity
@@ -71,8 +78,8 @@ public class UserController {
         try {
             User loginUser = userService.loginByPhoneAndPassword(userLoginBO.getPhone(), userLoginBO.getPassword());
 
+            // BeanCopy
             UserLoginVO userLoginVO = new UserLoginVO();
-
             BeanUtils.copyProperties(loginUser, userLoginVO);
 
             return ResponseEntity.ok(APIResultMap.SUCCESS("success", userLoginVO));
@@ -80,5 +87,43 @@ public class UserController {
             logger.error("[{}] 登录失败，原因: {}", userLoginBO.getPhone(), e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResultMap.ERROR(-1, e.getMessage()));
         }
+    }
+
+    @PostMapping("login/sms")
+    public ResponseEntity<Map<String, Object>> loginBySMSCode(@Validated @RequestBody UserSMSLoginBO userSMSLoginBO,
+                                                              BindingResult bindingResult) {
+        // 数据校验
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(APIResultMap.ERROR(-1, bindingResult.getFieldError().getDefaultMessage()));
+        }
+
+        try {
+            User user = userService.loginBySMSCode(userSMSLoginBO.getPhone(), userSMSLoginBO.getCode());
+
+            // BeanCopy
+            UserLoginVO userLoginVO = new UserLoginVO();
+            BeanUtils.copyProperties(user, userLoginVO);
+
+            return ResponseEntity.ok(APIResultMap.SUCCESS("", userLoginVO));
+        } catch (SMSCodeErrorException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(APIResultMap.ERROR(-1, e.getMessage()));
+        }
+    }
+
+    @PostMapping("login/sms/send-sms")
+    public ResponseEntity<Map<String, Object>> sendLoginSMSCode(@Validated @RequestBody UserSendSMSBO userSendSMSBO,
+                                                                BindingResult bindingResult) {
+        // 数据校验
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(APIResultMap.ERROR(-1, bindingResult.getFieldError().getDefaultMessage()));
+        }
+
+        commonService.sendSMS(userSendSMSBO.getPhone());
+
+        return ResponseEntity.ok(APIResultMap.SUCCESS(""));
     }
 }

@@ -3,20 +3,25 @@ package net.dengzixu.maine.service.impl;
 import net.dengzixu.maine.constant.Constant;
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
+import net.dengzixu.maine.exception.user.SMSCodeErrorException;
 import net.dengzixu.maine.exception.user.UserNotFoundException;
 import net.dengzixu.maine.mapper.UserMapper;
+import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;
 import net.dengzixu.maine.utils.PasswordUtils;
+import net.dengzixu.maine.utils.RandomGenerator;
 import net.dengzixu.maine.utils.SnowFlake;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final CommonService commonService;
     private final UserMapper userMapper;
 
     @Autowired
-    public UserServiceImpl(UserMapper userMapper) {
+    public UserServiceImpl(CommonService commonService, UserMapper userMapper) {
+        this.commonService = commonService;
         this.userMapper = userMapper;
     }
 
@@ -53,6 +58,29 @@ public class UserServiceImpl implements UserService {
         if (null == user || !encryptedPassword.equals(user.getPassword())) {
             throw new UserNotFoundException();
         }
+
+        return user;
+    }
+
+    @Override
+    public User loginBySMSCode(String phone, String code) throws SMSCodeErrorException {
+        if (!commonService.verifySMS(phone, code)) {
+            throw new SMSCodeErrorException();
+        }
+
+        // 判断用户是否存在 如果存在就返回 User，不存在就创建用户
+        User user = userMapper.getByPhone(phone);
+
+        // 存在就返回 User
+        if (null != user) {
+            return user;
+        }
+
+        // 不存在就创建用户
+        registerByPhone("用户 " + phone, RandomGenerator.nextPassword(), phone);
+
+        // 再获取一次
+        user = userMapper.getByPhone(phone);
 
         return user;
     }
