@@ -35,6 +35,14 @@ public final class APIResultMap {
         return new APIResultMap("success", 0, message, data).Build();
     }
 
+    public static Map<String, Object> ERROR(Integer code, String message) {
+        return new APIResultMap("error", code, message, null).Build();
+    }
+
+    public static Map<String, Object> ERROR(Integer code, String message,Object data) {
+        return new APIResultMap("error", code, message, data).Build();
+    }
+
     public APIResultMap STATUS(Boolean isSuccess) {
         this.status = isSuccess ? "success" : "error";
 

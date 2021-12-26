@@ -2,6 +2,7 @@ package net.dengzixu.maine.mapper;
 
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.mapper.provider.UserMapperProvider;
+import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.springframework.stereotype.Repository;
@@ -9,6 +10,9 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface UserMapper {
+    @InsertProvider(type = UserMapperProvider.class, method = "addSQLBuilder")
+    void add(User user);
+
     /**
      * 通过手机号 获取用户
      * 存在返回 User
@@ -17,7 +21,6 @@ public interface UserMapper {
      * @param phone 手机号
      * @return User
      */
-
-    @SelectProvider(type = UserMapperProvider.class, method = "UserMapperSQLBuilder")
+    @SelectProvider(type = UserMapperProvider.class, method = "getByPhoneSQLBuilder")
     User getByPhone(String phone);
 }

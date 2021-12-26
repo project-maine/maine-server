@@ -1,5 +1,6 @@
 package net.dengzixu.maine.mapper.provider;
 
+import net.dengzixu.maine.entity.User;
 import org.apache.ibatis.jdbc.SQL;
 
 public class UserMapperProvider {
@@ -9,7 +10,20 @@ public class UserMapperProvider {
             "password", "phone", "email",
             "status", "create_Time", "modify_time"};
 
-    public String UserMapperSQLBuilder(String phone) {
+    public String addSQLBuilder(User user) {
+        return new SQL() {{
+            INSERT_INTO(MAINE_USER_TABLE_NAME);
+            VALUES("id", "#{id}");
+            VALUES("name", "#{name}");
+            VALUES("password", "#{password}");
+            VALUES("phone", "#{phone}");
+            VALUES("email", "#{email}");
+            VALUES("status", "#{status}");
+
+        }}.toString();
+    }
+
+    public String getByPhoneSQLBuilder(String phone) {
         return new SQL() {{
             SELECT(ALL_COLUMN);
             FROM(MAINE_USER_TABLE_NAME);
