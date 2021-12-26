@@ -8,8 +8,22 @@ jar {
 
 
 dependencies {
+    implementation project(':maine-common-config')
+
+    implementation 'org.springframework.boot:spring-boot-starter'
+
     // https://mvnrepository.com/artifact/commons-codec/commons-codec
     implementation 'commons-codec:commons-codec:1.15'
+
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-rng-simple
+    implementation 'org.apache.commons:commons-rng-simple:1.4'
+
+    // https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-core
+    implementation 'com.aliyun:aliyun-java-sdk-core:4.5.30'
+
+    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+
 }
 
 //test {
