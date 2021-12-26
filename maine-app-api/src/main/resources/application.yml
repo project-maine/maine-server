@@ -1,5 +1,6 @@
 spring:
   profiles:
     include:
+      - common-system
       - api-dev
       - db-dev

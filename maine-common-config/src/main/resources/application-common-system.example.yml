@@ -1,0 +1,8 @@
+maine-config:
+  snowflake:
+    datacenter-id: 0
+    machine-id: 0
+
+  aliyun-sms:
+    access-key-id: <AccessKeyId>
+    access-secret: <AccessSecret>
