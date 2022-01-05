@@ -3,7 +3,7 @@ package net.dengzixu.maine.entity.vo;
 import lombok.Data;
 
 @Data
-public class UserLoginVO {
+public class UserInfoVO {
     private Long id;
     private String name;
     private String phone;

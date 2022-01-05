@@ -23,4 +23,7 @@ public interface UserMapper {
      */
     @SelectProvider(type = UserMapperProvider.class, method = "getByPhoneSQLBuilder")
     User getByPhone(String phone);
+
+    @SelectProvider(type = UserMapperProvider.class, method = "getByIDSQLBuilder")
+    User getByID(Long id);
 }

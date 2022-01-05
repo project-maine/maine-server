@@ -4,3 +4,4 @@ spring:
       - common-system
       - api-dev
       - db-dev
+      - redis-dev
