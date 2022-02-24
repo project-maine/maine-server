@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public User loginBySMSCode(String phone, String code) throws SMSCodeErrorException {
+        // 验证短信验证码是否有效
         if (!commonService.verifySMS(phone, code)) {
             throw new SMSCodeErrorException();
         }
@@ -82,7 +83,26 @@ public class UserServiceImpl implements UserService {
         }
 
         // 不存在就创建用户
-        registerByPhone("用户 " + phone, RandomGenerator.nextPassword(), phone);
+//        registerByPhone("用户 " + phone, RandomGenerator.nextPassword(), phone);
+
+        // 密码加密
+        String encryptedPassword = PasswordUtils.encrypt(RandomGenerator.nextPassword(), Constant.PASSWORD_SALT);
+
+        // 构造 User 对象
+        User createUser = new User();
+        createUser.setId(new SnowFlake(0, 0).nextId());
+        createUser.setName("用户 " + phone);
+        createUser.setPassword(encryptedPassword);
+        createUser.setPasswordStatus(0);
+        createUser.setPhone(phone);
+        createUser.setPhoneStatus(1);
+        createUser.setEmail("");
+        createUser.setEmailStatus(0);
+        createUser.setStatus(0);
+
+        // 写入数据库
+        userMapper.add(createUser);
+
 
         // 再获取一次
         user = userMapper.getByPhone(phone);
