@@ -3,6 +3,8 @@ package net.dengzixu.maine.web.api.v1;
 import net.dengzixu.maine.exception.BusinessException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.model.APIResultMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -21,7 +23,7 @@ public class BusinessExceptionHandler {
 
         HttpStatus httpStatus = HttpStatus.resolve(e.getHttpStatusCode());
 
-        return ResponseEntity.status(httpStatus)
+        return ResponseEntity.status(httpStatus != null ? httpStatus : HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(APIResponseMap.FAILED(-1, e.getMessage()));
 
     }
