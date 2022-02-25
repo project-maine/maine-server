@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Deprecated
 public final class APIResultMap {
     private String status = "error";
     private Integer code = 0;

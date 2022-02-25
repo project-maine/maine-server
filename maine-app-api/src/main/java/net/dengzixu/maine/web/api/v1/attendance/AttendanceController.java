@@ -2,7 +2,7 @@ package net.dengzixu.maine.web.api.v1.attendance;
 
 import net.dengzixu.maine.entity.bo.AttendanceCreateBO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
-import net.dengzixu.maine.model.APIResultMap;
+import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.AttendanceService;
 import net.dengzixu.maine.utils.JWTUtils;
 import org.slf4j.Logger;
@@ -13,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/attendance")
@@ -32,7 +30,7 @@ public class AttendanceController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Map<String, Object>> create(@RequestHeader("Authorization") String authorization,
+    public ResponseEntity<APIResponseMap> create(@RequestHeader("Authorization") String authorization,
                                                       @Validated @RequestBody AttendanceCreateBO attendanceCreateBO,
                                                       BindingResult bindingResult) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
@@ -41,11 +39,11 @@ public class AttendanceController {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(APIResultMap.ERROR(-1, bindingResult.getFieldError().getDefaultMessage()));
+                    .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
 
         attendanceService.createBasic(attendanceCreateBO.title(), attendanceCreateBO.description(), userID);
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResultMap.SUCCESS("创建成功"));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResponseMap.SUCCEEDED("创建成功"));
     }
 }

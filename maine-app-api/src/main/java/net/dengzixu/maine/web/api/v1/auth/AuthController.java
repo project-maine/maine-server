@@ -5,7 +5,7 @@ import net.dengzixu.maine.entity.bo.UserLoginBO;
 import net.dengzixu.maine.entity.bo.UserRegisterBO;
 import net.dengzixu.maine.entity.bo.UserSMSLoginBO;
 import net.dengzixu.maine.entity.bo.UserSendSMSBO;
-import net.dengzixu.maine.model.APIResultMap;
+import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;
 import net.dengzixu.maine.utils.JWTUtils;
@@ -21,8 +21,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/passport/v1")
@@ -42,64 +40,64 @@ public class AuthController {
     }
 
     @PostMapping("/register/phone")
-    public ResponseEntity<Map<String, Object>> registerByPhone(@Validated @RequestBody UserRegisterBO userRegisterBO,
-                                                               BindingResult bindingResult) {
+    public ResponseEntity<APIResponseMap> registerByPhone(@Validated @RequestBody UserRegisterBO userRegisterBO,
+                                                          BindingResult bindingResult) {
         // 数据校验
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(APIResultMap.ERROR(-1, bindingResult.getFieldError().getDefaultMessage()));
+                    .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
 
         userService.registerByPhone(userRegisterBO.getName(),
                 userRegisterBO.getPassword(),
                 userRegisterBO.getPhone());
 
-        return ResponseEntity.ok(APIResultMap.SUCCESS(""));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 
     @PostMapping("/auth/password")
-    public ResponseEntity<Map<String, Object>> authByPassword(@Validated @RequestBody UserLoginBO userLoginBO,
-                                                              BindingResult bindingResult) {
+    public ResponseEntity<APIResponseMap> authByPassword(@Validated @RequestBody UserLoginBO userLoginBO,
+                                                         BindingResult bindingResult) {
         // 数据校验
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(APIResultMap.ERROR(-1, bindingResult.getFieldError().getDefaultMessage()));
+                    .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
 
         User loginUser = userService.loginByPhoneAndPassword(userLoginBO.getPhone(), userLoginBO.getPassword());
 
-        return ResponseEntity.ok(APIResultMap.SUCCESS("", jwtUtils.encode(loginUser.getId())));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", jwtUtils.encode(loginUser.getId())));
     }
 
     @PostMapping("/auth/sms")
-    public ResponseEntity<Map<String, Object>> authBySMSCode(@Validated @RequestBody UserSMSLoginBO userSMSLoginBO,
-                                                             BindingResult bindingResult) {
+    public ResponseEntity<APIResponseMap> authBySMSCode(@Validated @RequestBody UserSMSLoginBO userSMSLoginBO,
+                                                        BindingResult bindingResult) {
         // 数据校验
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(APIResultMap.ERROR(-1, bindingResult.getFieldError().getDefaultMessage()));
+                    .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
 
         User user = userService.loginBySMSCode(userSMSLoginBO.getPhone(), userSMSLoginBO.getCode());
 
-        return ResponseEntity.ok(APIResultMap.SUCCESS("", jwtUtils.encode(user.getId())));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("登录成功", jwtUtils.encode(user.getId())));
     }
 
     @PostMapping("/auth/sms/send-sms")
-    public ResponseEntity<Map<String, Object>> sendSMSCode(@Validated @RequestBody UserSendSMSBO userSendSMSBO,
-                                                           BindingResult bindingResult) {
+    public ResponseEntity<APIResponseMap> sendSMSCode(@Validated @RequestBody UserSendSMSBO userSendSMSBO,
+                                                      BindingResult bindingResult) {
         // 数据校验
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .body(APIResultMap.ERROR(-1, bindingResult.getFieldError().getDefaultMessage()));
+                    .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
 
         commonService.sendSMS(userSendSMSBO.getPhone());
 
-        return ResponseEntity.ok(APIResultMap.SUCCESS(""));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 }

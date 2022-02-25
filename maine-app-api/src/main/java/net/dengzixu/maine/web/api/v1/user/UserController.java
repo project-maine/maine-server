@@ -3,7 +3,7 @@ package net.dengzixu.maine.web.api.v1.user;
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.entity.vo.UserInfoVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
-import net.dengzixu.maine.model.APIResultMap;
+import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;
 import net.dengzixu.maine.utils.JWTUtils;
@@ -14,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/v1/user")
@@ -35,7 +33,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
-    public ResponseEntity<Map<String, Object>> getUserInfo(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<APIResponseMap> getUserInfo(@RequestHeader("Authorization") String authorization) {
         long id = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
 
         User user = userService.getUserByID(id);
@@ -44,19 +42,17 @@ public class UserController {
 
         BeanUtils.copyProperties(user, userInfoVO);
 
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResultMap.SUCCESS("", userInfoVO));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResponseMap.SUCCEEDED("", userInfoVO));
     }
 
     @GetMapping("/info/{id}")
-    public ResponseEntity<Map<String, Object>> getUserInfoByID(@PathVariable("id") Long id) {
+    public ResponseEntity<APIResponseMap> getUserInfoByID(@PathVariable("id") Long id) {
         User user = userService.getUserByID(id);
 
         UserInfoVO userInfoVO = new UserInfoVO();
 
         BeanUtils.copyProperties(user, userInfoVO);
 
-
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResultMap.SUCCESS("", userInfoVO));
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResponseMap.SUCCEEDED("", userInfoVO));
     }
 }
