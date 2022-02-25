@@ -10,16 +10,17 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.maine.config.MaineConfig;
 import org.bouncycastle.util.encoders.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class JWTUtils {
+    private static final Logger logger = LoggerFactory.getLogger(JWTUtils.class);
+
     private final Algorithm algorithm;
 
     private final MaineConfig maineConfig;
@@ -46,8 +47,7 @@ public class JWTUtils {
     }
 
     public boolean verify(String token) {
-        JWTVerifier verifier = JWT.require(algorithm)
-                .build();
+        JWTVerifier verifier = JWT.require(algorithm).build();
         try {
             verifier.verify(token);
             return true;
@@ -56,7 +56,11 @@ public class JWTUtils {
         }
     }
 
-    public long decode(String token) {
+    public OptionalLong decode(String token) {
+        if (!this.verify(token)) {
+            return OptionalLong.empty();
+        }
+
         DecodedJWT decodedJWT = JWT.decode(token);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -65,15 +69,11 @@ public class JWTUtils {
             Map<String, Object> payloadMap = objectMapper.readValue(new String(Base64.decode(decodedJWT.getPayload())),
                     new TypeReference<>() {
                     });
-
-            return null != payloadMap.get("id") ? ((Number) payloadMap.get("id")).longValue() : -1;
-
+            return OptionalLong.of(((Number) payloadMap.get("id")).longValue());
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            return -1;
+            logger.error("JWT 解码失败", e);
+            return OptionalLong.empty();
         }
-
-//        return decodedJWT.getPayload();
     }
 
     private Date getExpireTime() {

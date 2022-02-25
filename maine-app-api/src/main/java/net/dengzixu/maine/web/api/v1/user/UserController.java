@@ -2,6 +2,7 @@ package net.dengzixu.maine.web.api.v1.user;
 
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.entity.vo.UserInfoVO;
+import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResultMap;
 import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;
@@ -35,11 +36,7 @@ public class UserController {
 
     @GetMapping("/info")
     public ResponseEntity<Map<String, Object>> getUserInfo(@RequestHeader("Authorization") String authorization) {
-        long id = jwtUtils.decode(authorization);
-
-        if (-1 == id) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResultMap.ERROR(-1, "用户身份过期,请重新登录"));
-        }
+        long id = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
 
         User user = userService.getUserByID(id);
 

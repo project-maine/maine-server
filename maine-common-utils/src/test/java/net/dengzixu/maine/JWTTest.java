@@ -1,5 +1,6 @@
 package net.dengzixu.maine;
 
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import net.dengzixu.maine.utils.JWTUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,8 @@ public class JWTTest {
 
         Assertions.assertTrue(jwtUtils.verify(token));
 
-        long id = jwtUtils.decode(token);
+        long id = jwtUtils.decode(token).getAsLong();
+
 
         System.out.println(id);
     }
@@ -34,8 +36,9 @@ public class JWTTest {
 
         Assertions.assertFalse(jwtUtils.verify(token));
 
-        long decode = jwtUtils.decode(token);
+        long id = jwtUtils.decode(token).getAsLong();
 
-        System.out.println(decode);
+
+        System.out.println(id);
     }
 }
