@@ -1,0 +1,18 @@
+package net.dengzixu.maine.mapper;
+
+import net.dengzixu.maine.entity.TaskRecord;
+import net.dengzixu.maine.mapper.provider.TaskRecordMapperProvider;
+import org.apache.ibatis.annotations.InsertProvider;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.SelectProvider;
+import org.springframework.stereotype.Repository;
+
+@Mapper
+@Repository
+public interface TaskRecordMapper {
+    @InsertProvider(type = TaskRecordMapperProvider.class, method = "addRecordSQLBuilder")
+    void addRecord(Long taskID, Long userID);
+
+    @SelectProvider(type = TaskRecordMapperProvider.class, method = "getAttendanceTaskByIDAndUserIDSQLBuilder")
+    TaskRecord getAttendanceTaskByIDAndUserID(Long taskID, Long userID);
+}

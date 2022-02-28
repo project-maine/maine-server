@@ -2,6 +2,7 @@ package net.dengzixu.maine.web.api.v1.attendance;
 
 import net.dengzixu.maine.entity.bo.AttendanceCreateBasicBO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
+import net.dengzixu.maine.mapper.TaskRecordMapper;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.AttendanceService;
 import net.dengzixu.maine.service.UserService;
@@ -53,7 +54,8 @@ public class AttendanceController {
     }
 
     @PostMapping("/take/web/{id}")
-    public ResponseEntity<APIResponseMap> webTake(@RequestHeader("Authorization") String authorization, @PathVariable(name = "id") Long taskID) {
+    public ResponseEntity<APIResponseMap> webTake(@RequestHeader("Authorization") String authorization,
+                                                  @PathVariable(name = "id") Long taskID) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
 
         attendanceService.webTake(taskID, userID);
