@@ -22,4 +22,9 @@ public class AttendanceServiceImpl implements AttendanceService {
     public void createBasic(String title, String description, Long userID) {
         attendanceMapper.addTask(title, description, userID);
     }
+
+    @Override
+    public void webTake(Long taskID, Long takeUserID) {
+        attendanceMapper.addRecord(taskID, takeUserID);
+    }
 }

@@ -1,6 +1,6 @@
 package net.dengzixu.maine.web.api.v1.attendance;
 
-import net.dengzixu.maine.entity.bo.AttendanceCreateBO;
+import net.dengzixu.maine.entity.bo.AttendanceCreateBasicBO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.AttendanceService;
@@ -29,10 +29,10 @@ public class AttendanceController {
         this.jwtUtils = jwtUtils;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create/basic")
     public ResponseEntity<APIResponseMap> create(@RequestHeader("Authorization") String authorization,
-                                                      @Validated @RequestBody AttendanceCreateBO attendanceCreateBO,
-                                                      BindingResult bindingResult) {
+                                                 @Validated @RequestBody AttendanceCreateBasicBO attendanceCreateBasicBO,
+                                                 BindingResult bindingResult) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
 
         // 数据校验
@@ -42,8 +42,17 @@ public class AttendanceController {
                     .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
 
-        attendanceService.createBasic(attendanceCreateBO.title(), attendanceCreateBO.description(), userID);
+        attendanceService.createBasic(attendanceCreateBasicBO.title(), attendanceCreateBasicBO.description(), userID);
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResponseMap.SUCCEEDED("创建成功"));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("创建成功"));
+    }
+
+    @PostMapping("/take/web/{id}")
+    public ResponseEntity<APIResponseMap> webTake(@RequestHeader("Authorization") String authorization, @PathVariable(name = "id") Long taskID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        attendanceService.webTake(taskID, userID);
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
     }
 }

@@ -10,4 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface AttendanceMapper {
     @InsertProvider(type = AttendanceMapperProvider.class, method = "addTaskSQLBuilder")
     void addTask(String title, String description, Long userID);
+
+    @InsertProvider(type = AttendanceMapperProvider.class, method = "addRecordSQLBuilder")
+    void addRecord(Long taskID, Long userID);
 }
