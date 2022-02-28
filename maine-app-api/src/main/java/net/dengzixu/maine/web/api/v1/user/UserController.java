@@ -36,6 +36,9 @@ public class UserController {
     public ResponseEntity<APIResponseMap> getUserInfo(@RequestHeader("Authorization") String authorization) {
         long id = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
 
+        // 验证用户状态
+        userService.validate(id);
+
         User user = userService.getUserByID(id);
 
         UserInfoVO userInfoVO = new UserInfoVO();

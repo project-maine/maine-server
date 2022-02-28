@@ -34,5 +34,19 @@ public interface UserService {
      */
     User loginBySMSCode(String phone, String code) throws SMSCodeErrorException;
 
+    /**
+     * 通过 用户ID 获取用户
+     *
+     * @param id 用户ID
+     * @return User
+     */
     User getUserByID(Long id);
+
+    /**
+     * 验证用户是否有效
+     *
+     * @param id 用户ID
+     * @return 有效返回 true, 无效返回 false
+     */
+    Boolean validate(Long id);
 }

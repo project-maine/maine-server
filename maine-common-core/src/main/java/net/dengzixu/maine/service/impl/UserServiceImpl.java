@@ -6,6 +6,7 @@ import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
 import net.dengzixu.maine.exception.common.SMSCodeErrorException;
 import net.dengzixu.maine.exception.user.UnknownUserException;
 import net.dengzixu.maine.exception.user.UserNotFoundException;
+import net.dengzixu.maine.exception.user.UserStatusErrorException;
 import net.dengzixu.maine.mapper.UserMapper;
 import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;
@@ -119,5 +120,20 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+
+    @Override
+    public Boolean validate(Long id) {
+        User user = this.getUserByID(id);
+
+        if (null == user) {
+            throw new UnknownUserException();
+        }
+
+        if (!user.getStatus().equals(0)) {
+            throw new UserStatusErrorException();
+        }
+
+        return true;
     }
 }
