@@ -21,14 +21,11 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     private final UserService userService;
-    private final CommonService commonService;
-
     private final JWTUtils jwtUtils;
 
     @Autowired
-    public UserController(UserService userService, CommonService commonService, JWTUtils jwtUtils) {
+    public UserController(UserService userService, JWTUtils jwtUtils) {
         this.userService = userService;
-        this.commonService = commonService;
         this.jwtUtils = jwtUtils;
     }
 

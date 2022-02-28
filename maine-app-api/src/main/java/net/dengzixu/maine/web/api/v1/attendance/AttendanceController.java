@@ -53,9 +53,9 @@ public class AttendanceController {
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("创建成功"));
     }
 
-    @PostMapping("/take/web/{id}")
+    @PostMapping("/take/web/{taskID}")
     public ResponseEntity<APIResponseMap> webTake(@RequestHeader("Authorization") String authorization,
-                                                  @PathVariable(name = "id") Long taskID) {
+                                                  @PathVariable() Long taskID) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
 
         attendanceService.webTake(taskID, userID);
