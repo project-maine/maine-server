@@ -1,8 +1,8 @@
 package net.dengzixu.maine.service;
 
 import net.dengzixu.maine.entity.User;
-import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
 import net.dengzixu.maine.exception.common.SMSCodeErrorException;
+import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
 import net.dengzixu.maine.exception.user.UserNotFoundException;
 
 public interface UserService {

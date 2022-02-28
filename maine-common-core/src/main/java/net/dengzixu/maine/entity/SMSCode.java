@@ -2,6 +2,7 @@ package net.dengzixu.maine.entity;
 
 import lombok.Data;
 
+@Deprecated
 @Data
 public class SMSCode {
     private Long traceId;
