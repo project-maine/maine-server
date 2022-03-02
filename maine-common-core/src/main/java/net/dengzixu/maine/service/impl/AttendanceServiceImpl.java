@@ -1,6 +1,8 @@
 package net.dengzixu.maine.service.impl;
 
+import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.exception.attendance.AttendanceAlreadyTakeException;
+import net.dengzixu.maine.exception.task.TaskNotFoundException;
 import net.dengzixu.maine.mapper.TaskMapper;
 import net.dengzixu.maine.mapper.TaskRecordMapper;
 import net.dengzixu.maine.service.AttendanceService;
@@ -24,9 +26,21 @@ public class AttendanceServiceImpl implements AttendanceService {
 
 
     @Override
-    public void createBasic(String title, String description, Long userID) {
+    public void createTaskBasic(String title, String description, Long userID) {
         taskMapper.addTask(title, description, userID);
     }
+
+    @Override
+    public Task getTaskBasicInfo(Long taskID) {
+        Task task = taskMapper.getTask(taskID);
+
+        if (null == task) {
+            throw new TaskNotFoundException();
+        }
+
+        return task;
+    }
+
 
     @Override
     public void webTake(Long taskID, Long takeUserID) {
