@@ -2,6 +2,7 @@ package net.dengzixu.maine.web.api.v1.attendance;
 
 import net.dengzixu.maine.entity.bo.AttendanceCreateBasicBO;
 import net.dengzixu.maine.entity.bo.TakeByCodeBO;
+import net.dengzixu.maine.entity.vo.GenerateCodeVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.AttendanceService;
@@ -62,10 +63,23 @@ public class AttendanceController {
     public ResponseEntity<APIResponseMap> takeByWeb(@RequestHeader("Authorization") String authorization,
                                                     @PathVariable() Long taskID) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+        userService.validate(userID);
+
 
         attendanceService.webTake(taskID, userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
+    }
+
+    @PostMapping("/{taskID}/take/code/generate")
+    public ResponseEntity<APIResponseMap> generateTakeCode(@RequestHeader("Authorization") String authorization,
+                                                           @PathVariable() Long taskID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+        userService.validate(userID);
+
+        String generatedCode = attendanceService.generateCode(taskID, userID, 3600);
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", new GenerateCodeVO(generatedCode)));
     }
 
     @PostMapping("/take/code")
@@ -84,6 +98,6 @@ public class AttendanceController {
         }
         attendanceService.codeTake(takeByCodeBO.code(), userID);
 
-        return ResponseEntity.ok(APIResponseMap.FAILED(0, "已完成考勤"));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
     }
 }

@@ -11,6 +11,10 @@ public class RandomGenerator {
         return String.valueOf(rng.nextInt(900000) + 100000);
     }
 
+    public static String nextTaskCode() {
+        return String.valueOf(rng.nextInt(900000) + 100000);
+    }
+
     public static String nextPassword() {
         byte[] randomData = new byte[4096];
         rng.nextBytes(randomData);
