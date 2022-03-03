@@ -1,6 +1,7 @@
 package net.dengzixu.maine.web.api.v1.attendance;
 
 import net.dengzixu.maine.entity.bo.AttendanceCreateBasicBO;
+import net.dengzixu.maine.entity.bo.TakeByCodeBO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.AttendanceService;
@@ -58,12 +59,31 @@ public class AttendanceController {
     }
 
     @PostMapping("/{taskID}/take/web")
-    public ResponseEntity<APIResponseMap> webTake(@RequestHeader("Authorization") String authorization,
-                                                  @PathVariable() Long taskID) {
+    public ResponseEntity<APIResponseMap> takeByWeb(@RequestHeader("Authorization") String authorization,
+                                                    @PathVariable() Long taskID) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
 
         attendanceService.webTake(taskID, userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
+    }
+
+    @PostMapping("/take/code")
+    public ResponseEntity<APIResponseMap> takeByCode(@RequestHeader("Authorization") String authorization,
+                                                     @Validated @RequestBody TakeByCodeBO takeByCodeBO,
+                                                     BindingResult bindingResult) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        // 数据校验
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
+        }
+        attendanceService.codeTake(takeByCodeBO.code(), userID);
+
+        return ResponseEntity.ok(APIResponseMap.FAILED(0, "已完成考勤"));
     }
 }
