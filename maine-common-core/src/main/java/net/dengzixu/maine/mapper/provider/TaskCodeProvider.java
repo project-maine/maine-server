@@ -22,7 +22,7 @@ public class TaskCodeProvider {
         return new SQL() {{
             SELECT(ALL_COLUMNS);
             FROM(TABLE_NAME);
-            WHERE("task_id ", "#{taskID}");
+            WHERE("task_id = #{taskID}");
             if (allowExpire) {
                 WHERE("expire_time < now()");
             }

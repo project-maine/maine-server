@@ -19,8 +19,8 @@ public class TaskRecordMapperProvider {
         return new SQL() {{
             SELECT(ALL_COLUMN);
             FROM(MAINE_ATTENDANCE_RECORD_TABLE_NAME);
-            WHERE("task_id", "#{taskID}");
-            WHERE("user_id", "#{userID}");
+            WHERE("task_id = #{taskID}");
+            WHERE("user_id = #{userID}");
         }}.toString();
     }
 }
