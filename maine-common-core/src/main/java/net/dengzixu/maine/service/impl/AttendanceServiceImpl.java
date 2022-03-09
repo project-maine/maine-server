@@ -3,6 +3,7 @@ package net.dengzixu.maine.service.impl;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskCode;
 import net.dengzixu.maine.exception.attendance.AttendanceAlreadyTakeException;
+import net.dengzixu.maine.exception.task.TaskAlreadyClosed;
 import net.dengzixu.maine.exception.task.TaskCodeErrorException;
 import net.dengzixu.maine.exception.task.TaskNotFoundException;
 import net.dengzixu.maine.mapper.TaskCodeMapper;
@@ -69,6 +70,12 @@ public class AttendanceServiceImpl implements AttendanceService {
     public String generateCode(Long taskID, Long userID, Integer ttl) {
         String generatedCode = RandomGenerator.nextTaskCode();
 
+        Task task = this.validateAndGet(taskID);
+
+        if (task.getStatus().equals(1)) {
+            throw new TaskAlreadyClosed();
+        }
+
         // 判断当前 Task 是否已经生成了 Code
         // 如果已经生成过并且未过期，就返回这个 Code
         TaskCode taskCode = taskCodeMapper.getByTaskID(taskID, false);
@@ -110,9 +117,35 @@ public class AttendanceServiceImpl implements AttendanceService {
         this.take(taskID, takeUserID, TakeType.CODE);
     }
 
+    @Override
+    public void modifyTaskStatus(Long taskID, Long userID, Integer status) {
+        Task task = this.validateAndGet(taskID);
 
+        if (!task.getUserId().equals(userID)) {
+            throw new TaskNotFoundException();
+        }
+
+        taskMapper.modifyTaskStatus(taskID, status);
+    }
+
+    @Override
+    public Task validateAndGet(Long taskID) {
+        // 判断任务状态
+        Task task = taskMapper.getTask(taskID);
+
+        if (null == task || task.getStatus().equals(2)) {
+            throw new TaskNotFoundException();
+        } else if (task.getStatus().equals(1)) {
+            throw new TaskAlreadyClosed();
+        }
+
+        return task;
+    }
 
     private void take(Long taskID, Long takeUserID, TakeType takeType) {
+        // 判断任务状态
+        Task task = validateAndGet(taskID);
+
         // 判断是否已经参加过考勤了
         if (null != taskRecordMapper.getAttendanceTaskByIDAndUserID(taskID, takeUserID)) {
             throw new AttendanceAlreadyTakeException();

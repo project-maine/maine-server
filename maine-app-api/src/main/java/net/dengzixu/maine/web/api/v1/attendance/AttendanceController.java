@@ -118,9 +118,13 @@ public class AttendanceController {
         List<TaskVO> taskVOList = new LinkedList<>();
 
         taskList.forEach(item -> {
-            taskVOList.add(new TaskVO(item.getId(), item.getTitle(), item.getDescription(), item.getUserId()));
+            // 不显示状态不正常的任务
+            if (item.getStatus().equals(0) || item.getStatus().equals(1)) {
+                taskVOList.add(new TaskVO(item.getId(), item.getTitle(),
+                        item.getDescription(), item.getUserId(), item.getStatus()));
+            }
         });
 
-        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("",taskVOList));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", taskVOList));
     }
 }

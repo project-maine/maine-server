@@ -54,4 +54,21 @@ public interface AttendanceService {
      * @param takeUserID 参加考勤的 User ID
      */
     void codeTake(String code, Long takeUserID);
+
+    /**
+     * 修改任务状态
+     *
+     * @param taskID Task ID
+     * @param userID 修改者 User ID
+     * @param status 修改后的状态
+     */
+    void modifyTaskStatus(Long taskID, Long userID, Integer status);
+
+    /**
+     * 判断 Task 的状态
+     *
+     * @param taskID Task ID
+     * @return Task
+     */
+    Task validateAndGet(Long taskID);
 }

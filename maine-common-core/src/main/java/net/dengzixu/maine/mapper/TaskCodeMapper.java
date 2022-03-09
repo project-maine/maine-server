@@ -1,7 +1,7 @@
 package net.dengzixu.maine.mapper;
 
 import net.dengzixu.maine.entity.TaskCode;
-import net.dengzixu.maine.mapper.provider.TaskCodeSQLProvider;
+import net.dengzixu.maine.mapper.provider.TaskCodeProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface TaskCodeMapper {
-    @SelectProvider(type = TaskCodeSQLProvider.class, method = "getByCodeSQLBuilder")
+    @SelectProvider(type = TaskCodeProvider.class, method = "getByCodeSQLBuilder")
     TaskCode getByCode(String code, Boolean allowExpire);
 
-    @SelectProvider(type = TaskCodeSQLProvider.class, method = "getByTaskIdSQLBuilder")
+    @SelectProvider(type = TaskCodeProvider.class, method = "getByTaskIdSQLBuilder")
     TaskCode getByTaskID(Long taskID, Boolean allowExpire);
 
-    @InsertProvider(type = TaskCodeSQLProvider.class, method = "addSQLBuilder")
+    @InsertProvider(type = TaskCodeProvider.class, method = "addSQLBuilder")
     void add(Long taskID, String code, Integer ttl);
 }
