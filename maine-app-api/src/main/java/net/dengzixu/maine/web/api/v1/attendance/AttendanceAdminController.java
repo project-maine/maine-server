@@ -45,6 +45,17 @@ public class AttendanceAdminController {
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("成功"));
     }
 
+    @PostMapping("/{taskID}/delete")
+    public ResponseEntity<APIResponseMap> deleteTask(@RequestHeader("Authorization") String authorization,
+                                                     @PathVariable() Long taskID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+        userService.validate(userID);
+
+        attendanceService.modifyTaskStatus(taskID, userID, 2);
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("成功"));
+    }
+
     @GetMapping("/{taskID}/takers")
     public ResponseEntity<APIResponseMap> getTaskTaker(@RequestHeader("Authorization") String authorization,
                                                        @PathVariable() Long taskID) {
