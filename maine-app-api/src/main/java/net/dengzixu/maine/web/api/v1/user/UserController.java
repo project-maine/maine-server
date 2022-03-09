@@ -42,7 +42,7 @@ public class UserController {
 
         BeanUtils.copyProperties(user, userInfoVO);
 
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResponseMap.SUCCEEDED("", userInfoVO));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", userInfoVO));
     }
 
     @GetMapping("/info/{id}")
