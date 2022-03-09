@@ -1,6 +1,7 @@
 package net.dengzixu.maine.service;
 
 import net.dengzixu.maine.entity.Task;
+import net.dengzixu.maine.entity.User;
 
 import java.util.List;
 
@@ -71,4 +72,12 @@ public interface AttendanceService {
      * @return Task
      */
     Task validateAndGet(Long taskID);
+
+    /**
+     * 获取 Task 的参与者
+     *
+     * @param taskID Task ID
+     * @return List<User>
+     */
+    List<User> getTakerListByTaskID(Long taskID);
 }

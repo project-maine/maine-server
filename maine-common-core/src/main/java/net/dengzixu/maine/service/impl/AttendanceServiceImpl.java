@@ -2,6 +2,7 @@ package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskCode;
+import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.exception.attendance.AttendanceAlreadyTakeException;
 import net.dengzixu.maine.exception.task.TaskAlreadyClosed;
 import net.dengzixu.maine.exception.task.TaskCodeErrorException;
@@ -135,11 +136,19 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         if (null == task || task.getStatus().equals(2)) {
             throw new TaskNotFoundException();
-        } else if (task.getStatus().equals(1)) {
-            throw new TaskAlreadyClosed();
         }
+//        else if (task.getStatus().equals(1)) {
+//            throw new TaskAlreadyClosed();
+//        }
 
         return task;
+    }
+
+    @Override
+    public List<User> getTakerListByTaskID(Long taskID) {
+        this.validateAndGet(taskID);
+
+        return taskRecordMapper.getUserListByTaskID(taskID);
     }
 
     private void take(Long taskID, Long takeUserID, TakeType takeType) {
