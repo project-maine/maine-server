@@ -20,7 +20,15 @@ public class TaskMapperProvider {
         return new SQL() {{
             SELECT(ALL_COLUMNS);
             FROM(MAINE_ATTENDANCE_TASK_TABLE_NAME);
-            WHERE("id ", "#{taskID}");
+            WHERE("id = #{taskID}");
+        }}.toString();
+    }
+
+    public String getTaskListByUserID(Long userID) {
+        return new SQL() {{
+            SELECT(ALL_COLUMNS);
+            FROM(MAINE_ATTENDANCE_TASK_TABLE_NAME);
+            WHERE("user_id = #{userID}");
         }}.toString();
     }
 }

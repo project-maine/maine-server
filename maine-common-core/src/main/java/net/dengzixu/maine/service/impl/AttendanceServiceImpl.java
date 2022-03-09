@@ -1,6 +1,7 @@
 package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.entity.Task;
+import net.dengzixu.maine.entity.TaskCode;
 import net.dengzixu.maine.exception.attendance.AttendanceAlreadyTakeException;
 import net.dengzixu.maine.exception.task.TaskCodeErrorException;
 import net.dengzixu.maine.exception.task.TaskNotFoundException;
@@ -14,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class AttendanceServiceImpl implements AttendanceService {
@@ -52,6 +55,10 @@ public class AttendanceServiceImpl implements AttendanceService {
         return task;
     }
 
+    @Override
+    public List<Task> getTaskListByUserID(Long userID) {
+        return taskMapper.getTaskListByUserID(userID);
+    }
 
     @Override
     public void webTake(Long taskID, Long takeUserID) {
@@ -61,20 +68,21 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public String generateCode(Long taskID, Long userID, Integer ttl) {
         String generatedCode = RandomGenerator.nextTaskCode();
-        String redisKey = "task:code:" + generatedCode;
 
-        // 判断Code是否重复，重复就再生成一个
-        while (redisUtils.hasKey(redisKey)) {
-            // 如归恰巧 考勤码和 Task ID 重复了... 算了 没有这种巧合
-//            if (taskID.equals(Long.parseLong(redisUtils.getKey(redisKey)))){
-//                break;
-//            }
-            generatedCode = RandomGenerator.nextTaskCode();
-            redisKey = "task:code:" + generatedCode;
+        // 判断当前 Task 是否已经生成了 Code
+        // 如果已经生成过并且未过期，就返回这个 Code
+        TaskCode taskCode = taskCodeMapper.getByTaskID(taskID, false);
+        if (null != taskCode) {
+            return taskCode.getCode();
         }
 
-        // Code 存入 Redis
-        redisUtils.setKey(redisKey, String.valueOf(taskID), ttl);
+        // 判断验证码是否重复
+        while ((taskCode = taskCodeMapper.getByCode(generatedCode, false)) != null
+                && !taskCode.getTaskID().equals(taskID)) {
+            generatedCode = RandomGenerator.nextTaskCode();
+        }
+
+        taskCodeMapper.add(taskID, generatedCode, ttl);
 
         return generatedCode;
     }
@@ -82,19 +90,27 @@ public class AttendanceServiceImpl implements AttendanceService {
     @Override
     public void codeTake(String code, Long takeUserID) {
         // 根据考勤码获取考勤任务
-//        TaskCode taskCode = taskCodeMapper.get(code, false);
         String redisKey = "task:code:" + code;
 
         // 判断考勤码是否存在
-        if (!redisUtils.hasKey(redisKey)) {
+//        if (!redisUtils.hasKey(redisKey)) {
+//            throw new TaskCodeErrorException();
+//        }
+        TaskCode taskCode = taskCodeMapper.getByCode(code, false);
+
+        if (null == taskCode) {
             throw new TaskCodeErrorException();
         }
 
-        long taskID = Long.parseLong(redisUtils.getKey(redisKey));
+//        long taskID = Long.parseLong(redisUtils.getKey(redisKey));
+
+        long taskID = taskCode.getTaskID();
 
         // 进行考勤
         this.take(taskID, takeUserID, TakeType.CODE);
     }
+
+
 
     private void take(Long taskID, Long takeUserID, TakeType takeType) {
         // 判断是否已经参加过考勤了

@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface TaskMapper {
@@ -15,4 +17,7 @@ public interface TaskMapper {
 
     @SelectProvider(type = TaskMapperProvider.class, method = "getTaskSQLBuilder")
     Task getTask(Long taskID);
+
+    @SelectProvider(type = TaskMapperProvider.class, method = "getTaskListByUserID")
+    List<Task> getTaskListByUserID(Long userID);
 }

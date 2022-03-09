@@ -2,6 +2,8 @@ package net.dengzixu.maine.service;
 
 import net.dengzixu.maine.entity.Task;
 
+import java.util.List;
+
 public interface AttendanceService {
     /**
      * 创建基本考勤任务
@@ -21,6 +23,14 @@ public interface AttendanceService {
     Task getTaskBasicInfo(Long taskID);
 
     /**
+     * 获取用户创建的所有考勤任务
+     *
+     * @param userID 用户 ID
+     * @return List<Task>s
+     */
+    List<Task> getTaskListByUserID(Long userID);
+
+    /**
      * Web端 参加考勤
      *
      * @param taskID     Task ID
@@ -35,7 +45,7 @@ public interface AttendanceService {
      * @param userID 生成考勤码 User ID，考勤码仅允许考勤创建者生成
      * @return 考勤码
      */
-    String generateCode(Long taskID, Long userID,Integer tll);
+    String generateCode(Long taskID, Long userID, Integer tll);
 
     /**
      * 考勤码 参加考勤

@@ -1,8 +1,10 @@
 package net.dengzixu.maine.web.api.v1.attendance;
 
+import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.bo.AttendanceCreateBasicBO;
 import net.dengzixu.maine.entity.bo.TakeByCodeBO;
 import net.dengzixu.maine.entity.vo.GenerateCodeVO;
+import net.dengzixu.maine.entity.vo.TaskVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.AttendanceService;
@@ -16,6 +18,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/attendance")
@@ -99,5 +104,23 @@ public class AttendanceController {
         attendanceService.codeTake(takeByCodeBO.code(), userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
+    }
+
+    @GetMapping("/task/list")
+    public ResponseEntity<APIResponseMap> taskList(@RequestHeader("Authorization") String authorization) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+
+        List<Task> taskList = attendanceService.getTaskListByUserID(userID);
+
+        List<TaskVO> taskVOList = new LinkedList<>();
+
+        taskList.forEach(item -> {
+            taskVOList.add(new TaskVO(item.getId(), item.getTitle(), item.getDescription(), item.getUserId()));
+        });
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("",taskVOList));
     }
 }
