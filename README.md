@@ -18,16 +18,7 @@
 
 ## 吐槽
 
-> 致**大连东软某某学院**的某位老师，如果您认为一个后端项目，只有 **CRUD<sup>1</sup>**、只用 `Ctrl+C`、`Ctrl+V`就能完成的话，那我真是特别欣赏您的教学能力，希望能您能够多发表一些学术论文，评到更高级的职称，早日晋升，为大连东软某某学院的教育事业做出卓越的贡献。
-> 在此，我要向您说一声“抱歉”，以我的水平能力还不足以成为您的学生，我也不足以完成一个**本科**的毕业设计，给您的发展拖后腿了，因此我再次向您郑重的道歉，“对不起”。
->
-> **附言&免责声明:** 以上情节为虚构，并包含了~~艺术加工~~、~~添油加醋~~<sup>2</sup>的内容。
-> 其目的仅仅为吐槽，请勿对号入座，给自己找不必要的麻烦。
->
->
->  [1] [徐启江. 基于J2EE的CRUD组合组件的设计与实现[D].东北大学,2016.](https://kns.cnki.net/kcms/detail/detail.aspx?FileName=1018074087.nh&DbName=CMFD2019)
-> 
-> [2] [添油加醋_百度百科](https://baike.baidu.com/item/%E6%B7%BB%E6%B2%B9%E5%8A%A0%E9%86%8B/4296391)
+> PiDoh7QqKuWkp+i/nuS4nOi9r+afkOafkOWtpumZoioq55qE5p+Q5L2N6ICB5biI77yM5aaC5p6c5oKo6K6k5Li65LiA5Liq5ZCO56uv6aG555uu77yM5Y+q5pyJICoqQ1JVRDxzdXA+MTwvc3VwPioq44CB5Y+q55SoIGBDdHJsK0Ng44CBYEN0cmwrVmDlsLHog73lrozmiJDnmoTor53vvIzpgqPmiJHnnJ/mmK/nibnliKvmrKPotY/mgqjnmoTmlZnlrabog73lipvvvIzluIzmnJvog73mgqjog73lpJ/lpJrlj5HooajkuIDkupvlrabmnK/orrrmlofvvIzor4TliLDmm7Tpq5jnuqfnmoTogYznp7DvvIzml6nml6XmmYvljYfvvIzkuLrlpKfov57kuJzova/mn5Dmn5DlrabpmaLnmoTmlZnogrLkuovkuJrlgZrlh7rljZPotornmoTotKHnjK7jgIIKPiDlnKjmraTvvIzmiJHopoHlkJHmgqjor7TkuIDlo7DigJzmirHmrYnigJ3vvIzku6XmiJHnmoTmsLTlubPog73lipvov5jkuI3otrPku6XmiJDkuLrmgqjnmoTlrabnlJ/vvIzmiJHkuZ/kuI3otrPku6XlrozmiJDkuIDkuKoqKuacrOenkSoq55qE5q+V5Lia6K6+6K6h77yM57uZ5oKo55qE5Y+R5bGV5ouW5ZCO6IW/5LqG77yM5Zug5q2k5oiR5YaN5qyh5ZCR5oKo6YOR6YeN55qE6YGT5q2J77yM4oCc5a+55LiN6LW34oCd44CCCj4KPiAqKumZhOiogCblhY3otKPlo7DmmI46Kiog5Lul5LiK5oOF6IqC5Li66Jma5p6E77yM5bm25YyF5ZCr5LqGfn7oibrmnK/liqDlt6V+fuOAgX5+5re75rK55Yqg6YaLfn48c3VwPjI8L3N1cD7nmoTlhoXlrrnjgIIKPiDlhbbnm67nmoTku4Xku4XkuLrlkJDmp73vvIzor7fli7/lr7nlj7flhaXluqfvvIznu5noh6rlt7Hmib7kuI3lv4XopoHnmoTpurvng6bjgIIKPgo+Cj4gIFsxXSBb5b6Q5ZCv5rGfLiDln7rkuo5KMkVF55qEQ1JVROe7hOWQiOe7hOS7tueahOiuvuiuoeS4juWunueOsFtEXS7kuJzljJflpKflraYsMjAxNi5dKGh0dHBzOi8va25zLmNua2kubmV0L2tjbXMvZGV0YWlsL2RldGFpbC5hc3B4P0ZpbGVOYW1lPTEwMTgwNzQwODcubmgmRGJOYW1lPUNNRkQyMDE5KQo+IAo+IFsyXSBb5re75rK55Yqg6YaLX+eZvuW6pueZvuenkV0oaHR0cHM6Ly9iYWlrZS5iYWlkdS5jb20vaXRlbS8lRTYlQjclQkIlRTYlQjIlQjklRTUlOEElQTAlRTklODYlOEIvNDI5NjM5MSk=
 >
 >
 >  ----邓紫旭 2022年3月9日
