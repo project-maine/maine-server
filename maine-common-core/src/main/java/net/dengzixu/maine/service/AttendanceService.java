@@ -5,6 +5,7 @@ import net.dengzixu.maine.entity.TaskSetting;
 import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.User;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AttendanceService {
@@ -26,7 +27,8 @@ public interface AttendanceService {
      * @param userID          创建者 User ID
      * @param taskSettingItem 考勤设置
      */
-    void createTask(String title, String description, Long userID, TaskSettingItem taskSettingItem);
+    void createTask(String title, String description, LocalDateTime endTime,
+                    Long userID, TaskSettingItem taskSettingItem);
 
     /**
      * 获取考勤任务基本信息

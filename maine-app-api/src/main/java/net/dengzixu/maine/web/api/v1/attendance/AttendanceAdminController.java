@@ -53,10 +53,11 @@ public class AttendanceAdminController {
                     .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
 
-        attendanceService.createTask(createTaskBO.title(), createTaskBO.description(), userID, new TaskSettingItem() {{
-            setEndTime(createTaskBO.taskSettingBO().endTime());
-            setAllowGroups(createTaskBO.taskSettingBO().allowGroupList());
-        }});
+        TaskSettingItem taskSettingItem = new TaskSettingItem();
+        taskSettingItem.setAllowGroups(createTaskBO.taskSettingBO().allowGroupList());
+
+        attendanceService.createTask(createTaskBO.title(), createTaskBO.description(), createTaskBO.endTime(),
+                userID, taskSettingItem);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }

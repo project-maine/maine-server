@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -52,22 +53,20 @@ public class AttendanceServiceImpl implements AttendanceService {
 
     @Override
     public void createTaskBasic(String title, String description, Long userID) {
-        taskMapper.addTask(new SnowFlake(0, 0).nextId(), title, description, userID);
+//        taskMapper.addTask(new SnowFlake(0, 0).nextId(), title, description, userID);
+        logger.error("不应调用此接口");
     }
 
     @Override
     @Transactional
-    public void createTask(String title, String description, Long userID, TaskSettingItem taskSettingItem) {
+    public void createTask(String title, String description, LocalDateTime endTime,
+                           Long userID, TaskSettingItem taskSettingItem) {
         Long taskID = new SnowFlake(0, 0).nextId();
 
-        taskMapper.addTask(taskID, title, description, userID);
-
-        TaskSettingItem tempTaskSettingItem = new TaskSettingItem();
-        tempTaskSettingItem.setEndTime(taskSettingItem.getEndTime());
-        tempTaskSettingItem.setAllowGroups(taskSettingItem.getAllowGroups());
+        taskMapper.addTask(taskID, title, description, endTime.toString(), userID);
 
         try {
-            byte[] taskSettingItemBytes = SerializeUtils.serialize(tempTaskSettingItem);
+            byte[] taskSettingItemBytes = SerializeUtils.serialize(taskSettingItem);
             taskSettingMapper.addSetting(taskID, taskSettingItemBytes);
         } catch (IOException e) {
             logger.error("序列化失败", e);
@@ -196,5 +195,4 @@ public class AttendanceServiceImpl implements AttendanceService {
     private enum TakeType {
         CODE, WEB;
     }
-
 }
