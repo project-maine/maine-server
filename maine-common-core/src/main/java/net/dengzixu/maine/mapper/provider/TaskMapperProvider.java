@@ -7,9 +7,10 @@ public class TaskMapperProvider {
 
     private static final String[] ALL_COLUMNS = new String[]{"id", "title", "description", "user_id", "status", "create_time", "modify_time"};
 
-    public String addTaskSQLBuilder(String title, String description, Long userID) {
+    public String addTaskSQLBuilder(Long id, String title, String description, Long userID) {
         return new SQL() {{
             INSERT_INTO(MAINE_ATTENDANCE_TASK_TABLE_NAME);
+            VALUES("id", "#{id}");
             VALUES("title", "#{title}");
             VALUES("description", "#{description}");
             VALUES("user_id", "#{userID}");

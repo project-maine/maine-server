@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface TaskMapper {
     @InsertProvider(type = TaskMapperProvider.class, method = "addTaskSQLBuilder")
-    void addTask(String title, String description, Long userID);
+    void addTask(Long id, String title, String description, Long userID);
 
     @SelectProvider(type = TaskMapperProvider.class, method = "getTaskSQLBuilder")
     Task getTask(Long taskID);

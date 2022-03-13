@@ -1,6 +1,9 @@
 package net.dengzixu.maine.web.api.v1.attendance;
 
+import net.dengzixu.maine.entity.TaskSetting;
+import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.User;
+import net.dengzixu.maine.entity.bo.CreateTaskBO;
 import net.dengzixu.maine.entity.vo.UserInfoVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
@@ -11,7 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
@@ -32,6 +38,27 @@ public class AttendanceAdminController {
         this.attendanceService = attendanceService;
         this.userService = userService;
         this.jwtUtils = jwtUtils;
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<APIResponseMap> createTask(@RequestHeader("Authorization") String authorization,
+                                                     @Validated @RequestBody CreateTaskBO createTaskBO,
+                                                     BindingResult bindingResult) {
+        final long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+        userService.validate(userID);
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
+        }
+
+        attendanceService.createTask(createTaskBO.title(), createTaskBO.description(), userID, new TaskSettingItem() {{
+            setEndTime(createTaskBO.taskSettingBO().endTime());
+            setAllowGroups(createTaskBO.taskSettingBO().allowGroupList());
+        }});
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 
     @PostMapping("/{taskID}/close")

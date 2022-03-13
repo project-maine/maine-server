@@ -40,6 +40,7 @@ public class AttendanceController {
     }
 
     @PostMapping("/create/basic")
+    @Deprecated
     public ResponseEntity<APIResponseMap> create(@RequestHeader("Authorization") String authorization,
                                                  @Validated @RequestBody AttendanceCreateBasicBO attendanceCreateBasicBO,
                                                  BindingResult bindingResult) {

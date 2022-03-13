@@ -1,8 +1,7 @@
 package net.dengzixu.maine.service.impl;
 
-import net.dengzixu.maine.entity.Task;
-import net.dengzixu.maine.entity.TaskCode;
-import net.dengzixu.maine.entity.User;
+import net.dengzixu.maine.entity.*;
+import net.dengzixu.maine.exception.BusinessException;
 import net.dengzixu.maine.exception.attendance.AttendanceAlreadyTakeException;
 import net.dengzixu.maine.exception.task.TaskAlreadyClosed;
 import net.dengzixu.maine.exception.task.TaskCodeErrorException;
@@ -10,14 +9,21 @@ import net.dengzixu.maine.exception.task.TaskNotFoundException;
 import net.dengzixu.maine.mapper.TaskCodeMapper;
 import net.dengzixu.maine.mapper.TaskMapper;
 import net.dengzixu.maine.mapper.TaskRecordMapper;
+import net.dengzixu.maine.mapper.TaskSettingMapper;
 import net.dengzixu.maine.service.AttendanceService;
 import net.dengzixu.maine.utils.RandomGenerator;
 import net.dengzixu.maine.utils.RedisUtils;
+import net.dengzixu.maine.utils.SerializeUtils;
+import net.dengzixu.maine.utils.SnowFlake;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 @Service
@@ -27,6 +33,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final TaskMapper taskMapper;
     private final TaskRecordMapper taskRecordMapper;
     private final TaskCodeMapper taskCodeMapper;
+    private final TaskSettingMapper taskSettingMapper;
 
     private final RedisUtils redisUtils;
 
@@ -34,16 +41,38 @@ public class AttendanceServiceImpl implements AttendanceService {
     public AttendanceServiceImpl(TaskMapper taskMapper,
                                  TaskRecordMapper taskRecordMapper,
                                  TaskCodeMapper taskCodeMapper,
+                                 TaskSettingMapper taskSettingMapper,
                                  RedisUtils redisUtils) {
         this.taskMapper = taskMapper;
         this.taskRecordMapper = taskRecordMapper;
         this.taskCodeMapper = taskCodeMapper;
+        this.taskSettingMapper = taskSettingMapper;
         this.redisUtils = redisUtils;
     }
 
     @Override
     public void createTaskBasic(String title, String description, Long userID) {
-        taskMapper.addTask(title, description, userID);
+        taskMapper.addTask(new SnowFlake(0, 0).nextId(), title, description, userID);
+    }
+
+    @Override
+    @Transactional
+    public void createTask(String title, String description, Long userID, TaskSettingItem taskSettingItem) {
+        Long taskID = new SnowFlake(0, 0).nextId();
+
+        taskMapper.addTask(taskID, title, description, userID);
+
+        TaskSettingItem tempTaskSettingItem = new TaskSettingItem();
+        tempTaskSettingItem.setEndTime(taskSettingItem.getEndTime());
+        tempTaskSettingItem.setAllowGroups(taskSettingItem.getAllowGroups());
+
+        try {
+            byte[] taskSettingItemBytes = SerializeUtils.serialize(tempTaskSettingItem);
+            taskSettingMapper.addSetting(taskID, taskSettingItemBytes);
+        } catch (IOException e) {
+            logger.error("序列化失败", e);
+            throw new BusinessException("内部错误", 500);
+        }
     }
 
     @Override
@@ -167,4 +196,5 @@ public class AttendanceServiceImpl implements AttendanceService {
     private enum TakeType {
         CODE, WEB;
     }
+
 }

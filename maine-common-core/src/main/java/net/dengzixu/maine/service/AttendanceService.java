@@ -1,6 +1,8 @@
 package net.dengzixu.maine.service;
 
 import net.dengzixu.maine.entity.Task;
+import net.dengzixu.maine.entity.TaskSetting;
+import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.User;
 
 import java.util.List;
@@ -13,7 +15,18 @@ public interface AttendanceService {
      * @param description 描述
      * @param userID      创建者 user ID
      */
+    @Deprecated
     void createTaskBasic(String title, String description, Long userID);
+
+    /**
+     * 创建考勤任务
+     *
+     * @param title           任务名称
+     * @param description     任务描述
+     * @param userID          创建者 User ID
+     * @param taskSettingItem 考勤设置
+     */
+    void createTask(String title, String description, Long userID, TaskSettingItem taskSettingItem);
 
     /**
      * 获取考勤任务基本信息
