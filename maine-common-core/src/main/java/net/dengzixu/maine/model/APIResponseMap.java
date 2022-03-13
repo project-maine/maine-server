@@ -57,7 +57,7 @@ public final class APIResponseMap extends LinkedHashMap<String, Object> {
     }
 
     public static APIResponseMap FAILED(Integer code, FieldError fieldError) {
-        return new APIResponseMap(Status.SUCCEEDED, 0, null != fieldError ? fieldError.getDefaultMessage() : "数据错误", null, null);
+        return new APIResponseMap(Status.FAILED, code, null != fieldError ? fieldError.getDefaultMessage() : "数据错误", null, null);
     }
 
     public enum Status {
