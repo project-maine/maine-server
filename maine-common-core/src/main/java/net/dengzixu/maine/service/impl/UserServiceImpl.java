@@ -44,8 +44,11 @@ public class UserServiceImpl implements UserService {
         user.setId(new SnowFlake(0, 0).nextId());
         user.setName(username);
         user.setPassword(encryptedPassword);
+        user.setPasswordStatus(1);
         user.setPhone(phone);
+        user.setPhoneStatus(1);
         user.setEmail("");
+        user.setEmailStatus(0);
         user.setStatus(0);
 
         // 写入数据库
