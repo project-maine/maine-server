@@ -3,7 +3,10 @@ package net.dengzixu.maine.web.api.v1.attendance;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.bo.AttendanceCreateBasicBO;
 import net.dengzixu.maine.entity.bo.TakeByCodeBO;
+import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 import net.dengzixu.maine.entity.vo.GenerateCodeVO;
+import net.dengzixu.maine.entity.vo.TaskInfoVO;
+import net.dengzixu.maine.entity.vo.TaskSettingVO;
 import net.dengzixu.maine.entity.vo.TaskVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
@@ -60,9 +63,22 @@ public class AttendanceController {
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("创建成功"));
     }
 
-    @GetMapping({"/{taskId}/info", "/{taskId}/info/basic"})
+    @GetMapping({"/{taskId}/info/basic"})
+    @Deprecated
     public ResponseEntity<APIResponseMap> info(@PathVariable() Long taskId) {
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("success", attendanceService.getTaskBasicInfo(taskId)));
+    }
+
+    @GetMapping("/{taskId}/info")
+    public ResponseEntity<APIResponseMap> infoAdvance(@PathVariable() Long taskId) {
+        TaskInfoDTO taskInfoDTO = attendanceService.getTaskInfo(taskId);
+
+        TaskInfoVO taskInfoVO = new TaskInfoVO(taskInfoDTO.getId(), taskInfoDTO.getTitle(), taskInfoDTO.getDescription(),
+                taskInfoDTO.getUserId(), taskInfoDTO.getStatus(), taskInfoDTO.getEndTime(), taskInfoDTO.getCreateTime(),
+                new TaskSettingVO(taskInfoDTO.getTaskSettingItem().getAllowGroups()));
+
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", taskInfoVO));
     }
 
     @PostMapping("/{taskID}/take/web")
@@ -105,27 +121,5 @@ public class AttendanceController {
         attendanceService.codeTake(takeByCodeBO.code(), userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
-    }
-
-    @GetMapping("/task/list")
-    public ResponseEntity<APIResponseMap> taskList(@RequestHeader("Authorization") String authorization) {
-        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
-
-        userService.validate(userID);
-
-
-        List<Task> taskList = attendanceService.getTaskListByUserID(userID);
-
-        List<TaskVO> taskVOList = new LinkedList<>();
-
-        taskList.forEach(item -> {
-            // 不显示状态不正常的任务
-            if (item.getStatus().equals(0) || item.getStatus().equals(1)) {
-                taskVOList.add(new TaskVO(item.getId(), item.getTitle(),
-                        item.getDescription(), item.getUserId(), item.getStatus()));
-            }
-        });
-
-        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", taskVOList));
     }
 }

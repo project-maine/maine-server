@@ -1,9 +1,10 @@
 package net.dengzixu.maine.web.api.v1.attendance;
 
-import net.dengzixu.maine.entity.TaskSetting;
+import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.entity.bo.CreateTaskBO;
+import net.dengzixu.maine.entity.vo.TaskVO;
 import net.dengzixu.maine.entity.vo.UserInfoVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
@@ -40,7 +41,7 @@ public class AttendanceAdminController {
         this.jwtUtils = jwtUtils;
     }
 
-    @PostMapping("/create")
+    @PostMapping("/task/create")
     public ResponseEntity<APIResponseMap> createTask(@RequestHeader("Authorization") String authorization,
                                                      @Validated @RequestBody CreateTaskBO createTaskBO,
                                                      BindingResult bindingResult) {
@@ -60,6 +61,28 @@ public class AttendanceAdminController {
                 userID, taskSettingItem);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
+    }
+
+    @GetMapping("/task/list")
+    public ResponseEntity<APIResponseMap> taskList(@RequestHeader("Authorization") String authorization) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+
+        List<Task> taskList = attendanceService.getTaskListByUserID(userID);
+
+        List<TaskVO> taskVOList = new LinkedList<>();
+
+        taskList.forEach(item -> {
+            // 不显示状态不正常的任务
+            if (item.getStatus().equals(0) || item.getStatus().equals(1)) {
+                taskVOList.add(new TaskVO(item.getId(), item.getTitle(),
+                        item.getDescription(), item.getUserId(), item.getStatus()));
+            }
+        });
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", taskVOList));
     }
 
     @PostMapping("/{taskID}/close")
@@ -84,7 +107,7 @@ public class AttendanceAdminController {
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("成功"));
     }
 
-    @GetMapping("/{taskID}/takers")
+    @GetMapping("/{taskID}/participant/list")
     public ResponseEntity<APIResponseMap> getTaskTaker(@RequestHeader("Authorization") String authorization,
                                                        @PathVariable() Long taskID) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);

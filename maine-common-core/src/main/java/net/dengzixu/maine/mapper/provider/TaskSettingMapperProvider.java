@@ -12,4 +12,12 @@ public class TaskSettingMapperProvider {
             VALUES("setting", "#{setting}");
         }}.toString();
     }
+
+    public String getSettingSQLBuilder(Long taskID) {
+        return new SQL() {{
+            SELECT("setting");
+            FROM(TABLE_NAME);
+            WHERE("task_id = #{taskID}");
+        }}.toString();
+    }
 }

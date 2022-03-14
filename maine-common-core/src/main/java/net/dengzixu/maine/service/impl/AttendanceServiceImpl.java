@@ -1,6 +1,8 @@
 package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.entity.*;
+import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
+import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 import net.dengzixu.maine.exception.BusinessException;
 import net.dengzixu.maine.exception.attendance.AttendanceAlreadyTakeException;
 import net.dengzixu.maine.exception.task.TaskAlreadyClosed;
@@ -21,9 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -83,6 +83,38 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
 
         return task;
+    }
+
+    @Override
+    public TaskInfoDTO getTaskInfo(Long taskID) {
+        TaskInfoDTO taskInfoDTO = new TaskInfoDTO();
+
+        Task task = taskMapper.getTask(taskID);
+
+        if (null == task) {
+            throw new TaskNotFoundException();
+        }
+
+        // BeanCopy
+        taskInfoDTO.setId(taskID);
+        taskInfoDTO.setTitle(task.getTitle());
+        taskInfoDTO.setDescription(task.getDescription());
+        taskInfoDTO.setUserId(task.getUserId());
+        taskInfoDTO.setStatus(task.getStatus());
+        taskInfoDTO.setEndTime(task.getEndTime());
+        taskInfoDTO.setCreateTime(task.getCreateTime());
+
+
+        TaskSettingDO taskSettingDO = taskSettingMapper.getSetting(taskID);
+
+        try {
+            TaskSettingItem taskSettingItem = SerializeUtils.deserialize(taskSettingDO.getSetting());
+            taskInfoDTO.setTaskSettingItem(taskSettingItem);
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return taskInfoDTO;
     }
 
     @Override

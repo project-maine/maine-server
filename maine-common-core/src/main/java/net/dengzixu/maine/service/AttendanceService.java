@@ -1,9 +1,9 @@
 package net.dengzixu.maine.service;
 
 import net.dengzixu.maine.entity.Task;
-import net.dengzixu.maine.entity.TaskSetting;
 import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.User;
+import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,6 +37,8 @@ public interface AttendanceService {
      * @return Task
      */
     Task getTaskBasicInfo(Long taskID);
+
+    TaskInfoDTO getTaskInfo(Long taskID);
 
     /**
      * 获取用户创建的所有考勤任务
