@@ -5,7 +5,7 @@ import org.apache.ibatis.jdbc.SQL;
 public class TaskMapperProvider {
     private static final String MAINE_ATTENDANCE_TASK_TABLE_NAME = "maine_attendance_task";
 
-    private static final String[] ALL_COLUMNS = new String[]{"id", "title", "description", "user_id", "status", "create_time", "modify_time"};
+    private static final String[] ALL_COLUMNS = new String[]{"id", "title", "description", "user_id", "status", "end_time", "create_time", "modify_time"};
 
     public String addTaskSQLBuilder(Long id, String title, String description, String endTime, Long userID) {
         return new SQL() {{
