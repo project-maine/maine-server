@@ -2,7 +2,8 @@ package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.Group;
 import net.dengzixu.maine.exception.group.GroupNotFoundException;
-import net.dengzixu.maine.exception.group.UserAlreadyJoinException;
+import net.dengzixu.maine.exception.group.UserAlreadyJoinGroupException;
+import net.dengzixu.maine.exception.group.UserNotJoinGroupException;
 import net.dengzixu.maine.mapper.GroupMapper;
 import net.dengzixu.maine.mapper.GroupNumberMapper;
 import net.dengzixu.maine.service.GroupService;
@@ -52,11 +53,20 @@ public class GroupServiceImpl implements GroupService {
             throw new GroupNotFoundException();
         }
 
-        if (groupNumberMapper.isUserInGroup(groupID, userID) > 0) {
-            throw new UserAlreadyJoinException();
+        if (groupNumberMapper.isUserInGroup(groupID, userID, true) > 0) {
+            throw new UserAlreadyJoinGroupException();
         }
 
         groupNumberMapper.add(groupID, userID);
+    }
+
+    @Override
+    public void leave(Long groupID, Long userID) {
+        if (groupNumberMapper.isUserInGroup(groupID, userID, false) < 1) {
+            throw new UserNotJoinGroupException();
+        }
+
+        groupNumberMapper.modifyStatus(groupID, userID, 1);
     }
 
 }

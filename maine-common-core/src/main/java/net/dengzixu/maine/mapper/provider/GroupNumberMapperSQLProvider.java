@@ -15,12 +15,24 @@ public class GroupNumberMapperSQLProvider {
         }}.toString();
     }
 
-    public String isUserInGroup(Long groupID, Long userID) {
+    public String modifyStatusSQLBuilder(Long groupID, Long userID, Integer Status){
+        return new SQL() {{
+            UPDATE(TABLE_NAME);
+            SET("status = #{Status}");
+            WHERE("group_id = #{groupID}");
+            WHERE("user_id = #{userID}");
+        }}.toString();
+    }
+
+    public String isUserInGroup(Long groupID, Long userID,Boolean allowLeave) {
         return new SQL() {{
             SELECT("COUNT(*)");
             FROM(TABLE_NAME);
             WHERE("group_id = #{groupID}");
             WHERE("user_id = #{userID}");
+            if (!allowLeave){
+                WHERE("status = 0");
+            }
             LIMIT(1);
         }}.toString();
     }
