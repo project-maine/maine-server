@@ -88,17 +88,6 @@ public class TaskController {
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
     }
 
-    @PostMapping("/{taskID}/take/code/generate")
-    public ResponseEntity<APIResponseMap> generateTakeCode(@RequestHeader("Authorization") String authorization,
-                                                           @PathVariable() Long taskID) {
-        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
-        userService.validate(userID);
-
-        String generatedCode = taskService.generateCode(taskID, userID, 3600);
-
-        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", new GenerateCodeVO(generatedCode)));
-    }
-
     @PostMapping("/take/code")
     public ResponseEntity<APIResponseMap> takeByCode(@RequestHeader("Authorization") String authorization,
                                                      @Validated @RequestBody TakeByCodeBO takeByCodeBO,

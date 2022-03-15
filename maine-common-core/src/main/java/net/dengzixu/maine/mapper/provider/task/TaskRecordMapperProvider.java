@@ -31,11 +31,11 @@ public class TaskRecordMapperProvider {
         }}.toString();
     }
 
-    public String getUserListByTaskIDSQLBuilder(Long taskID) {
+    public String getParticipantListByTaskIDSQLBuilder(Long taskID) {
         return new SQL() {{
-            SELECT(ALL_USER_COLUMN);
-            FROM(MAINE_ATTENDANCE_RECORD_TABLE_NAME);
-            INNER_JOIN("maine_user ON maine_attendance_record.user_id = maine_user.id");
+            SELECT("U.id AS user_id", "U.name AS user_name", "TR.create_time AS take_Time");
+            FROM("maine_attendance_record AS TR");
+            INNER_JOIN("maine_user AS U ON TR.user_id = U.id");
             WHERE("task_id = #{taskID}");
         }}.toString();
     }

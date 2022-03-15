@@ -1,7 +1,9 @@
 package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.entity.*;
+import net.dengzixu.maine.entity.dataobject.ParticipantDO;
 import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
+import net.dengzixu.maine.entity.dto.ParticipantDTO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 import net.dengzixu.maine.exception.BusinessException;
 import net.dengzixu.maine.exception.task.TaskAlreadyTakeException;
@@ -25,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -205,10 +208,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<User> getTakerListByTaskID(Long taskID) {
+    public List<ParticipantDTO> getParticipantList(Long taskID) {
         this.validateAndGet(taskID);
 
-        return taskRecordMapper.getUserListByTaskID(taskID);
+        List<ParticipantDO> participantDOList = taskRecordMapper.getParticipantListByTaskID(taskID);
+
+        List<ParticipantDTO> participantDTOList = new ArrayList<>();
+
+        participantDOList.forEach(item -> {
+            ParticipantDTO participantDTO = new ParticipantDTO(item.getUserID(), item.getUserName(), item.getTakeTime());
+            participantDTOList.add(participantDTO);
+        });
+        return participantDTOList;
     }
 
     private void take(Long taskID, Long takeUserID, TakeType takeType) {

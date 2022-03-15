@@ -2,7 +2,7 @@ package net.dengzixu.maine.service;
 
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskSettingItem;
-import net.dengzixu.maine.entity.User;
+import net.dengzixu.maine.entity.dto.ParticipantDTO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 
 import java.time.LocalDateTime;
@@ -96,5 +96,5 @@ public interface TaskService {
      * @param taskID Task ID
      * @return List<User>
      */
-    List<User> getTakerListByTaskID(Long taskID);
+    List<ParticipantDTO> getParticipantList(Long taskID);
 }

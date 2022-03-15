@@ -2,10 +2,9 @@ package net.dengzixu.maine.web.api.v1.task;
 
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskSettingItem;
-import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.entity.bo.CreateTaskBO;
-import net.dengzixu.maine.entity.vo.TaskVO;
-import net.dengzixu.maine.entity.vo.UserInfoVO;
+import net.dengzixu.maine.entity.dto.ParticipantDTO;
+import net.dengzixu.maine.entity.vo.*;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.TaskService;
@@ -85,6 +84,17 @@ public class TaskAdminController {
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", taskVOList));
     }
 
+    @PostMapping("/{taskID}/code/generate")
+    public ResponseEntity<APIResponseMap> generateTakeCode(@RequestHeader("Authorization") String authorization,
+                                                           @PathVariable() Long taskID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+        userService.validate(userID);
+
+        String generatedCode = taskService.generateCode(taskID, userID, 3600);
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", new GenerateCodeVO(generatedCode)));
+    }
+
     @PostMapping("/{taskID}/close")
     public ResponseEntity<APIResponseMap> closeTask(@RequestHeader("Authorization") String authorization,
                                                     @PathVariable() Long taskID) {
@@ -114,19 +124,15 @@ public class TaskAdminController {
         userService.validate(userID);
 
 
-        List<User> userList = taskService.getTakerListByTaskID(taskID);
+        List<ParticipantDTO> participantList = taskService.getParticipantList(taskID);
+
+        ParticipantListVO participantListVO = new ParticipantListVO(new LinkedList<>());
 
         // BeanCopy
-        List<UserInfoVO> userInfoVOList = new LinkedList<>();
+        participantList.forEach(item -> participantListVO.participantVOList().add(new ParticipantVO(item.userID(),
+                item.userName(),
+                item.takeTime())));
 
-        userList.forEach(item -> {
-            UserInfoVO userInfoVO = new UserInfoVO();
-
-            BeanUtils.copyProperties(item, userInfoVO);
-            userInfoVOList.add(userInfoVO);
-        });
-
-
-        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", userInfoVOList));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", participantListVO));
     }
 }
