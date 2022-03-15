@@ -40,7 +40,7 @@ public class GroupBasicController {
 
         // BeanCopy
         GroupInfoVO groupInfoVO = new GroupInfoVO(group.getId(), group.getName(),
-                group.getDescription(), group.getId(), group.getStatus(),
+                group.getDescription(), group.getUserID(), group.getStatus(),
                 group.getCreateTime(), group.getModifyTime());
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", groupInfoVO));
