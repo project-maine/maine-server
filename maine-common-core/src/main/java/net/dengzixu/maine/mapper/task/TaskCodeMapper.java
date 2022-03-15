@@ -1,7 +1,7 @@
-package net.dengzixu.maine.mapper;
+package net.dengzixu.maine.mapper.task;
 
 import net.dengzixu.maine.entity.TaskCode;
-import net.dengzixu.maine.mapper.provider.TaskCodeProvider;
+import net.dengzixu.maine.mapper.provider.task.TaskCodeProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;

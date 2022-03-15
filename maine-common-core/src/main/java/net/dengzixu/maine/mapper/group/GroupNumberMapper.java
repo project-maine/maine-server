@@ -1,7 +1,7 @@
-package net.dengzixu.maine.mapper;
+package net.dengzixu.maine.mapper.group;
 
 import net.dengzixu.maine.entity.dataobject.GroupNumberDO;
-import net.dengzixu.maine.mapper.provider.GroupNumberMapperSQLProvider;
+import net.dengzixu.maine.mapper.provider.group.GroupNumberMapperSQLProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;

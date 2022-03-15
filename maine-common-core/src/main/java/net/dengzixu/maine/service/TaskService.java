@@ -8,7 +8,7 @@ import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public interface AttendanceService {
+public interface TaskService {
     /**
      * 创建基本考勤任务
      *

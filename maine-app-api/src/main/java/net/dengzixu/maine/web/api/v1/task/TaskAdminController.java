@@ -1,4 +1,4 @@
-package net.dengzixu.maine.web.api.v1.attendance;
+package net.dengzixu.maine.web.api.v1.task;
 
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskSettingItem;
@@ -8,7 +8,7 @@ import net.dengzixu.maine.entity.vo.TaskVO;
 import net.dengzixu.maine.entity.vo.UserInfoVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
-import net.dengzixu.maine.service.AttendanceService;
+import net.dengzixu.maine.service.TaskService;
 import net.dengzixu.maine.service.UserService;
 import net.dengzixu.maine.utils.JWTUtils;
 import org.slf4j.Logger;
@@ -25,18 +25,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/v1/attendance/admin")
-public class AttendanceAdminController {
-    private static final Logger logger = LoggerFactory.getLogger(AttendanceAdminController.class);
+@RequestMapping("/v1/task/admin")
+public class TaskAdminController {
+    private static final Logger logger = LoggerFactory.getLogger(TaskAdminController.class);
 
-    private final AttendanceService attendanceService;
+    private final TaskService taskService;
     private final UserService userService;
 
     private final JWTUtils jwtUtils;
 
     @Autowired
-    public AttendanceAdminController(AttendanceService attendanceService, UserService userService, JWTUtils jwtUtils) {
-        this.attendanceService = attendanceService;
+    public TaskAdminController(TaskService taskService, UserService userService, JWTUtils jwtUtils) {
+        this.taskService = taskService;
         this.userService = userService;
         this.jwtUtils = jwtUtils;
     }
@@ -57,7 +57,7 @@ public class AttendanceAdminController {
         TaskSettingItem taskSettingItem = new TaskSettingItem();
         taskSettingItem.setAllowGroups(createTaskBO.taskSettingBO().allowGroupList());
 
-        attendanceService.createTask(createTaskBO.title(), createTaskBO.description(), createTaskBO.endTime(),
+        taskService.createTask(createTaskBO.title(), createTaskBO.description(), createTaskBO.endTime(),
                 userID, taskSettingItem);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
@@ -70,7 +70,7 @@ public class AttendanceAdminController {
         userService.validate(userID);
 
 
-        List<Task> taskList = attendanceService.getTaskListByUserID(userID);
+        List<Task> taskList = taskService.getTaskListByUserID(userID);
 
         List<TaskVO> taskVOList = new LinkedList<>();
 
@@ -91,7 +91,7 @@ public class AttendanceAdminController {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
         userService.validate(userID);
 
-        attendanceService.modifyTaskStatus(taskID, userID, 1);
+        taskService.modifyTaskStatus(taskID, userID, 1);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("成功"));
     }
@@ -102,7 +102,7 @@ public class AttendanceAdminController {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
         userService.validate(userID);
 
-        attendanceService.modifyTaskStatus(taskID, userID, 2);
+        taskService.modifyTaskStatus(taskID, userID, 2);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("成功"));
     }
@@ -114,7 +114,7 @@ public class AttendanceAdminController {
         userService.validate(userID);
 
 
-        List<User> userList = attendanceService.getTakerListByTaskID(taskID);
+        List<User> userList = taskService.getTakerListByTaskID(taskID);
 
         // BeanCopy
         List<UserInfoVO> userInfoVOList = new LinkedList<>();

@@ -1,7 +1,7 @@
-package net.dengzixu.maine.mapper;
+package net.dengzixu.maine.mapper.task;
 
 import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
-import net.dengzixu.maine.mapper.provider.TaskSettingMapperProvider;
+import net.dengzixu.maine.mapper.provider.task.TaskSettingMapperProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.ResultType;

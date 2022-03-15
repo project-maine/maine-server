@@ -1,7 +1,7 @@
-package net.dengzixu.maine.mapper;
+package net.dengzixu.maine.mapper.user;
 
 import net.dengzixu.maine.entity.User;
-import net.dengzixu.maine.mapper.provider.UserMapperProvider;
+import net.dengzixu.maine.mapper.provider.user.UserMapperProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;

@@ -1,16 +1,14 @@
-package net.dengzixu.maine.web.api.v1.attendance;
+package net.dengzixu.maine.web.api.v1.task;
 
-import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.bo.AttendanceCreateBasicBO;
 import net.dengzixu.maine.entity.bo.TakeByCodeBO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 import net.dengzixu.maine.entity.vo.GenerateCodeVO;
 import net.dengzixu.maine.entity.vo.TaskInfoVO;
 import net.dengzixu.maine.entity.vo.TaskSettingVO;
-import net.dengzixu.maine.entity.vo.TaskVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
-import net.dengzixu.maine.service.AttendanceService;
+import net.dengzixu.maine.service.TaskService;
 import net.dengzixu.maine.service.UserService;
 import net.dengzixu.maine.utils.JWTUtils;
 import org.slf4j.Logger;
@@ -22,22 +20,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
-import java.util.List;
-
 @RestController
-@RequestMapping("/v1/attendance")
-public class AttendanceController {
-    private static final Logger logger = LoggerFactory.getLogger(AttendanceController.class);
+@RequestMapping("/v1/task")
+public class TaskController {
+    private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
 
-    private final AttendanceService attendanceService;
+    private final TaskService taskService;
     private final UserService userService;
 
     private final JWTUtils jwtUtils;
 
     @Autowired
-    public AttendanceController(AttendanceService attendanceService, UserService userService, JWTUtils jwtUtils) {
-        this.attendanceService = attendanceService;
+    public TaskController(TaskService taskService, UserService userService, JWTUtils jwtUtils) {
+        this.taskService = taskService;
         this.userService = userService;
         this.jwtUtils = jwtUtils;
     }
@@ -58,7 +53,7 @@ public class AttendanceController {
                     .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
 
-        attendanceService.createTaskBasic(attendanceCreateBasicBO.title(), attendanceCreateBasicBO.description(), userID);
+        taskService.createTaskBasic(attendanceCreateBasicBO.title(), attendanceCreateBasicBO.description(), userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("创建成功"));
     }
@@ -66,12 +61,12 @@ public class AttendanceController {
     @GetMapping({"/{taskId}/info/basic"})
     @Deprecated
     public ResponseEntity<APIResponseMap> info(@PathVariable() Long taskId) {
-        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("success", attendanceService.getTaskBasicInfo(taskId)));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("success", taskService.getTaskBasicInfo(taskId)));
     }
 
     @GetMapping("/{taskId}/info")
     public ResponseEntity<APIResponseMap> infoAdvance(@PathVariable() Long taskId) {
-        TaskInfoDTO taskInfoDTO = attendanceService.getTaskInfo(taskId);
+        TaskInfoDTO taskInfoDTO = taskService.getTaskInfo(taskId);
 
         TaskInfoVO taskInfoVO = new TaskInfoVO(taskInfoDTO.getId(), taskInfoDTO.getTitle(), taskInfoDTO.getDescription(),
                 taskInfoDTO.getUserId(), taskInfoDTO.getStatus(), taskInfoDTO.getEndTime(), taskInfoDTO.getCreateTime(),
@@ -88,7 +83,7 @@ public class AttendanceController {
         userService.validate(userID);
 
 
-        attendanceService.webTake(taskID, userID);
+        taskService.webTake(taskID, userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
     }
@@ -99,7 +94,7 @@ public class AttendanceController {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
         userService.validate(userID);
 
-        String generatedCode = attendanceService.generateCode(taskID, userID, 3600);
+        String generatedCode = taskService.generateCode(taskID, userID, 3600);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", new GenerateCodeVO(generatedCode)));
     }
@@ -118,7 +113,7 @@ public class AttendanceController {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(APIResponseMap.FAILED(-1, bindingResult.getFieldError()));
         }
-        attendanceService.codeTake(takeByCodeBO.code(), userID);
+        taskService.codeTake(takeByCodeBO.code(), userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("已完成考勤"));
     }

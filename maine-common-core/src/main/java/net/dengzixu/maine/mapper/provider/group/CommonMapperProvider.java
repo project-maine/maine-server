@@ -1,4 +1,4 @@
-package net.dengzixu.maine.mapper.provider;
+package net.dengzixu.maine.mapper.provider.group;
 
 import org.apache.ibatis.jdbc.SQL;
 

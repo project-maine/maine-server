@@ -7,7 +7,7 @@ import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
 import net.dengzixu.maine.exception.user.UnknownUserException;
 import net.dengzixu.maine.exception.user.UserNotFoundException;
 import net.dengzixu.maine.exception.user.UserStatusErrorException;
-import net.dengzixu.maine.mapper.UserMapper;
+import net.dengzixu.maine.mapper.user.UserMapper;
 import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;
 import net.dengzixu.maine.utils.PasswordUtils;

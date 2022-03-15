@@ -1,7 +1,7 @@
-package net.dengzixu.maine.mapper;
+package net.dengzixu.maine.mapper.group;
 
 import net.dengzixu.maine.Group;
-import net.dengzixu.maine.mapper.provider.GroupMapperProvider;
+import net.dengzixu.maine.mapper.provider.group.GroupMapperProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;

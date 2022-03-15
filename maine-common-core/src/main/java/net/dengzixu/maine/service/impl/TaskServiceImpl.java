@@ -4,15 +4,15 @@ import net.dengzixu.maine.entity.*;
 import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 import net.dengzixu.maine.exception.BusinessException;
-import net.dengzixu.maine.exception.attendance.AttendanceAlreadyTakeException;
+import net.dengzixu.maine.exception.task.TaskAlreadyTakeException;
 import net.dengzixu.maine.exception.task.TaskAlreadyClosed;
 import net.dengzixu.maine.exception.task.TaskCodeErrorException;
 import net.dengzixu.maine.exception.task.TaskNotFoundException;
-import net.dengzixu.maine.mapper.TaskCodeMapper;
-import net.dengzixu.maine.mapper.TaskMapper;
-import net.dengzixu.maine.mapper.TaskRecordMapper;
-import net.dengzixu.maine.mapper.TaskSettingMapper;
-import net.dengzixu.maine.service.AttendanceService;
+import net.dengzixu.maine.mapper.task.TaskCodeMapper;
+import net.dengzixu.maine.mapper.task.TaskMapper;
+import net.dengzixu.maine.mapper.task.TaskRecordMapper;
+import net.dengzixu.maine.mapper.task.TaskSettingMapper;
+import net.dengzixu.maine.service.TaskService;
 import net.dengzixu.maine.utils.RandomGenerator;
 import net.dengzixu.maine.utils.RedisUtils;
 import net.dengzixu.maine.utils.SerializeUtils;
@@ -28,8 +28,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class AttendanceServiceImpl implements AttendanceService {
-    private static final Logger logger = LoggerFactory.getLogger(AttendanceServiceImpl.class);
+public class TaskServiceImpl implements TaskService {
+    private static final Logger logger = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     private final TaskMapper taskMapper;
     private final TaskRecordMapper taskRecordMapper;
@@ -39,11 +39,11 @@ public class AttendanceServiceImpl implements AttendanceService {
     private final RedisUtils redisUtils;
 
     @Autowired
-    public AttendanceServiceImpl(TaskMapper taskMapper,
-                                 TaskRecordMapper taskRecordMapper,
-                                 TaskCodeMapper taskCodeMapper,
-                                 TaskSettingMapper taskSettingMapper,
-                                 RedisUtils redisUtils) {
+    public TaskServiceImpl(TaskMapper taskMapper,
+                           TaskRecordMapper taskRecordMapper,
+                           TaskCodeMapper taskCodeMapper,
+                           TaskSettingMapper taskSettingMapper,
+                           RedisUtils redisUtils) {
         this.taskMapper = taskMapper;
         this.taskRecordMapper = taskRecordMapper;
         this.taskCodeMapper = taskCodeMapper;
@@ -217,7 +217,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         // 判断是否已经参加过考勤了
         if (null != taskRecordMapper.getAttendanceTaskByIDAndUserID(taskID, takeUserID)) {
-            throw new AttendanceAlreadyTakeException();
+            throw new TaskAlreadyTakeException();
         }
 
         // 写入考勤记录

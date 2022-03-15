@@ -1,7 +1,7 @@
-package net.dengzixu.maine.mapper;
+package net.dengzixu.maine.mapper.task;
 
 import net.dengzixu.maine.entity.Task;
-import net.dengzixu.maine.mapper.provider.TaskMapperProvider;
+import net.dengzixu.maine.mapper.provider.task.TaskMapperProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
