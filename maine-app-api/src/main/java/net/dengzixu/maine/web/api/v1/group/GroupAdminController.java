@@ -1,6 +1,8 @@
 package net.dengzixu.maine.web.api.v1.group;
 
 import net.dengzixu.maine.entity.bo.GroupAddBO;
+import net.dengzixu.maine.entity.dto.GroupNumberDTO;
+import net.dengzixu.maine.entity.vo.GroupNumberVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.GroupService;
@@ -13,6 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/group/admin")
@@ -48,5 +54,22 @@ public class GroupAdminController {
         groupService.create(groupAddBO.name(), groupAddBO.description(), userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
+    }
+
+    @GetMapping("{groupID}/numbers")
+    public ResponseEntity<APIResponseMap> getNumberList(@RequestHeader("Authorization") String authorization,
+                                                        @PathVariable Long groupID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        List<GroupNumberDTO> groupNumberDTOList = groupService.getGroupNumberList(groupID, userID);
+
+        List<GroupNumberVO> groupNumberVOList = new LinkedList<>();
+        groupNumberDTOList.forEach(item -> {
+            groupNumberVOList.add(new GroupNumberVO(item.getUserID(), item.getUserName(), item.getJoinTime()));
+        });
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", groupNumberVOList));
     }
 }

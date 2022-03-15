@@ -1,6 +1,8 @@
 package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.Group;
+import net.dengzixu.maine.entity.dataobject.GroupNumberDO;
+import net.dengzixu.maine.entity.dto.GroupNumberDTO;
 import net.dengzixu.maine.exception.group.GroupNotFoundException;
 import net.dengzixu.maine.exception.group.UserAlreadyJoinGroupException;
 import net.dengzixu.maine.exception.group.UserNotJoinGroupException;
@@ -12,6 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -67,6 +72,24 @@ public class GroupServiceImpl implements GroupService {
         }
 
         groupNumberMapper.modifyStatus(groupID, userID, 1);
+    }
+
+    @Override
+    public List<GroupNumberDTO> getGroupNumberList(Long groupID, Long userID) {
+
+        List<GroupNumberDO> groupNumberDOList = groupNumberMapper.getGroupNumberList(groupID, userID);
+
+        List<GroupNumberDTO> groupNumberDTOList = new LinkedList<>();
+
+        groupNumberDOList.forEach(item -> {
+            groupNumberDTOList.add(new GroupNumberDTO() {{
+                setUserID(item.getUserID());
+                setUserName(item.getUserName());
+                setJoinTime(item.getCreateTime());
+            }});
+        });
+
+        return groupNumberDTOList;
     }
 
 }

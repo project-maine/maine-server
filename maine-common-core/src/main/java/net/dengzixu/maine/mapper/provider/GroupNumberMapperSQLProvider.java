@@ -15,7 +15,7 @@ public class GroupNumberMapperSQLProvider {
         }}.toString();
     }
 
-    public String modifyStatusSQLBuilder(Long groupID, Long userID, Integer Status){
+    public String modifyStatusSQLBuilder(Long groupID, Long userID, Integer Status) {
         return new SQL() {{
             UPDATE(TABLE_NAME);
             SET("status = #{Status}");
@@ -24,16 +24,27 @@ public class GroupNumberMapperSQLProvider {
         }}.toString();
     }
 
-    public String isUserInGroup(Long groupID, Long userID,Boolean allowLeave) {
+    public String isUserInGroup(Long groupID, Long userID, Boolean allowLeave) {
         return new SQL() {{
             SELECT("COUNT(*)");
             FROM(TABLE_NAME);
             WHERE("group_id = #{groupID}");
             WHERE("user_id = #{userID}");
-            if (!allowLeave){
+            if (!allowLeave) {
                 WHERE("status = 0");
             }
             LIMIT(1);
+        }}.toString();
+    }
+
+    public String getGroupNumberListSQLBuilder(Long groupID, Long userID) {
+        return new SQL() {{
+            SELECT("U.id as user_id, u.name as user_name,GN.create_Time as create_time");
+            FROM("maine_group_number AS GN");
+            INNER_JOIN("maine_user AS U ON GN.user_id = U.id");
+            WHERE("GN.group_id = #{groupID}");
+            AND();
+            WHERE("GN.user_id = #{userID}");
         }}.toString();
     }
 }
