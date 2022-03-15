@@ -39,5 +39,20 @@ public interface GroupService {
      */
     void leave(Long groupID, Long userID);
 
+    /**
+     * 获取小组成员
+     *
+     * @param groupID 小组 ID
+     * @param userID  创建者 ID
+     * @return List<GroupNumberDTO>
+     */
     List<GroupNumberDTO> getGroupNumberList(Long groupID, Long userID);
+
+    /**
+     * 删除小组
+     *
+     * @param groupID 小组 ID
+     * @param userID  创建者 ID
+     */
+    void delete(Long groupID, Long userID);
 }

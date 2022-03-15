@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -71,5 +70,17 @@ public class GroupAdminController {
         });
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", groupNumberVOList));
+    }
+
+    @RequestMapping(value = "{groupID}/delete", method = {RequestMethod.DELETE, RequestMethod.POST})
+    public ResponseEntity<APIResponseMap> delete(@RequestHeader("Authorization") String authorization,
+                                                 @PathVariable Long groupID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        groupService.delete(groupID, userID);
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 }

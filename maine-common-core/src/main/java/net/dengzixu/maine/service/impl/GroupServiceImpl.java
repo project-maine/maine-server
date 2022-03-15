@@ -92,4 +92,14 @@ public class GroupServiceImpl implements GroupService {
         return groupNumberDTOList;
     }
 
+    @Override
+    public void delete(Long groupID, Long userID) {
+        Group group = getByID(groupID);
+
+        if (null == group || !group.getUserID().equals(userID)) {
+            throw new GroupNotFoundException();
+        }
+
+        groupMapper.modifyGroupStatus(groupID, 1);
+    }
 }

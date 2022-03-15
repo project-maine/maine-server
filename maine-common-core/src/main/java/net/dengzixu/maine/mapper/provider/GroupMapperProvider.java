@@ -24,6 +24,15 @@ public class GroupMapperProvider {
             SELECT(ALL_COLUMNS);
             FROM(TABLE_NAME);
             WHERE("id = #{groupID}");
+            WHERE("status = 0");
+        }}.toString();
+    }
+
+    public String modifyGroupStatusSQLBuilder(Long groupID) {
+        return new SQL() {{
+            UPDATE(TABLE_NAME);
+            SET("status = #{status}");
+            WHERE("id = #{groupID}");
         }}.toString();
     }
 }
