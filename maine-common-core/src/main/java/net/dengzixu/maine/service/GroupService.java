@@ -19,4 +19,12 @@ public interface GroupService {
      * @return Group
      */
     Group getByID(Long id);
+
+    /**
+     * 加入小组
+     *
+     * @param groupID 小组 ID
+     * @param userID  用户 ID
+     */
+    void join(Long groupID, Long userID);
 }

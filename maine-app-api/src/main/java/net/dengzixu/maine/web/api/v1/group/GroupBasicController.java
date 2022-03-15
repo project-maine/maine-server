@@ -48,8 +48,14 @@ public class GroupBasicController {
 
     @PostMapping("/{groupID}/join")
     public ResponseEntity<APIResponseMap> join(@RequestHeader("Authorization") String authorization,
-                                               @PathVariable("groupID") String groupID) {
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(APIResponseMap.FAILED(-100, "尚未完成"));
+                                               @PathVariable("groupID") Long groupID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        groupService.join(groupID, userID);
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 
     @PostMapping("/{groupID}/exit")
