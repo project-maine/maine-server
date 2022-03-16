@@ -16,8 +16,8 @@ public interface TaskRecordMapper {
     @InsertProvider(type = TaskRecordMapperProvider.class, method = "addRecordSQLBuilder")
     void addRecord(Long taskID, Long userID);
 
-    @SelectProvider(type = TaskRecordMapperProvider.class, method = "getAttendanceTaskByIDAndUserIDSQLBuilder")
-    TaskRecord getAttendanceTaskByIDAndUserID(Long taskID, Long userID);
+    @SelectProvider(type = TaskRecordMapperProvider.class, method = "getRecordByTaskIDAndUserIDSQLBuilder")
+    TaskRecord getRecordByTaskIDAndUserID(Long taskID, Long userID);
 
     @SelectProvider(type = TaskRecordMapperProvider.class, method = "getParticipantListByTaskIDSQLBuilder")
     List<ParticipantDO> getParticipantListByTaskID(Long taskID);

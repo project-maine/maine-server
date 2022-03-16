@@ -164,16 +164,11 @@ public class TaskServiceImpl implements TaskService {
         String redisKey = "task:code:" + code;
 
         // 判断考勤码是否存在
-//        if (!redisUtils.hasKey(redisKey)) {
-//            throw new TaskCodeErrorException();
-//        }
         TaskCode taskCode = taskCodeMapper.getByCode(code, false);
 
         if (null == taskCode) {
             throw new TaskCodeErrorException();
         }
-
-//        long taskID = Long.parseLong(redisUtils.getKey(redisKey));
 
         long taskID = taskCode.getTaskID();
 
@@ -227,7 +222,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = validateAndGet(taskID);
 
         // 判断是否已经参加过考勤了
-        if (null != taskRecordMapper.getAttendanceTaskByIDAndUserID(taskID, takeUserID)) {
+        if (null != taskRecordMapper.getRecordByTaskIDAndUserID(taskID, takeUserID)) {
             throw new TaskAlreadyTakeException();
         }
 
