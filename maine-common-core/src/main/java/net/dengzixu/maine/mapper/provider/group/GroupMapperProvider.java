@@ -16,6 +16,7 @@ public class GroupMapperProvider {
             VALUES("user_id", "#{userID}");
             VALUES("name", "#{name}");
             VALUES("description", "#{description}");
+            VALUES("status", "0");
         }}.toString();
     }
 
@@ -24,6 +25,15 @@ public class GroupMapperProvider {
             SELECT(ALL_COLUMNS);
             FROM(TABLE_NAME);
             WHERE("id = #{groupID}");
+            WHERE("status = 0");
+        }}.toString();
+    }
+
+    public String getListByUserIDSQLBuilder(Long userID) {
+        return new SQL() {{
+            SELECT(ALL_COLUMNS);
+            FROM(TABLE_NAME);
+            WHERE("user_id = #{userID}");
             WHERE("status = 0");
         }}.toString();
     }

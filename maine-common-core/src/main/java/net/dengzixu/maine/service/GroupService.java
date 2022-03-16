@@ -24,6 +24,14 @@ public interface GroupService {
     Group getByID(Long id);
 
     /**
+     * 获取小组列表
+     *
+     * @param userID 创建者 ID
+     * @return List<Group>
+     */
+    List<Group> getList(Long userID);
+
+    /**
      * 加入小组
      *
      * @param groupID 小组 ID

@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.UpdateProvider;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface GroupMapper {
@@ -16,6 +18,9 @@ public interface GroupMapper {
 
     @SelectProvider(type = GroupMapperProvider.class, method = "getByIDSQLBuilder")
     Group getByID(Long groupID);
+
+    @SelectProvider(type = GroupMapperProvider.class, method = "getListByUserIDSQLBuilder")
+    List<Group> getListByUserID(Long userID);
 
     @UpdateProvider(type = GroupMapperProvider.class, method = "modifyGroupStatusSQLBuilder")
     void modifyGroupStatus(Long groupID, Integer status);

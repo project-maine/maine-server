@@ -51,6 +51,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public List<Group> getList(Long userID) {
+        return groupMapper.getListByUserID(userID);
+    }
+
+    @Override
     public void join(Long groupID, Long userID) {
         Group group = getByID(groupID);
 

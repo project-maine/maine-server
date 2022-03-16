@@ -1,7 +1,10 @@
 package net.dengzixu.maine.web.api.v1.group;
 
+import net.dengzixu.maine.Group;
 import net.dengzixu.maine.entity.bo.GroupAddBO;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
+import net.dengzixu.maine.entity.vo.GroupInfoListVO;
+import net.dengzixu.maine.entity.vo.GroupInfoVO;
 import net.dengzixu.maine.entity.vo.GroupNumberVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
@@ -53,6 +56,30 @@ public class GroupAdminController {
         groupService.create(groupAddBO.name(), groupAddBO.description(), userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<APIResponseMap> list(@RequestHeader("Authorization") String authorization) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        List<Group> groupList = groupService.getList(userID);
+
+        GroupInfoListVO groupInfoListVO = new GroupInfoListVO(new LinkedList<>());
+
+        groupList.forEach(item -> {
+            groupInfoListVO.groupInfoVOList().add(new GroupInfoVO(item.getId(),
+                    item.getName(),
+                    item.getDescription(),
+                    item.getUserID(),
+                    item.getStatus(),
+                    item.getCreateTime(),
+                    item.getModifyTime()));
+        });
+
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", groupInfoListVO));
     }
 
     @GetMapping("{groupID}/numbers")
