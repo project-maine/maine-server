@@ -3,9 +3,8 @@ package net.dengzixu.maine.web.api.v1.group;
 import net.dengzixu.maine.Group;
 import net.dengzixu.maine.entity.bo.GroupAddBO;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
-import net.dengzixu.maine.entity.vo.GroupInfoListVO;
-import net.dengzixu.maine.entity.vo.GroupInfoVO;
-import net.dengzixu.maine.entity.vo.GroupNumberVO;
+import net.dengzixu.maine.entity.dto.JoinedGroupDTO;
+import net.dengzixu.maine.entity.vo.*;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.GroupService;
@@ -109,5 +108,27 @@ public class GroupAdminController {
         groupService.delete(groupID, userID);
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
+    }
+
+    @GetMapping("/joined/list")
+    public ResponseEntity<APIResponseMap> joinedList(@RequestHeader("Authorization") String authorization) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        List<JoinedGroupDTO> joinedGroupDTOList = groupService.getJoinedGroupList(userID);
+
+        JoinedGroupListVO joinedGroupListVO = new JoinedGroupListVO(new LinkedList<>());
+
+        joinedGroupDTOList.forEach(item -> {
+            joinedGroupListVO.joinedGroupList().add(new JoinedGroupVO(item.groupID(),
+                    item.groupName(),
+                    item.groupDescription(),
+                    item.groupStatus(),
+                    item.joinTime()));
+        });
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", joinedGroupListVO));
+
     }
 }

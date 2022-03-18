@@ -2,6 +2,7 @@ package net.dengzixu.maine.service;
 
 import net.dengzixu.maine.Group;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
+import net.dengzixu.maine.entity.dto.JoinedGroupDTO;
 
 import java.util.List;
 
@@ -63,4 +64,6 @@ public interface GroupService {
      * @param userID  创建者 ID
      */
     void delete(Long groupID, Long userID);
+
+    List<JoinedGroupDTO> getJoinedGroupList(Long userID);
 }

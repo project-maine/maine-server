@@ -1,6 +1,7 @@
 package net.dengzixu.maine.mapper.group;
 
 import net.dengzixu.maine.entity.dataobject.GroupNumberDO;
+import net.dengzixu.maine.entity.dataobject.JoinedGroupDO;
 import net.dengzixu.maine.mapper.provider.group.GroupNumberMapperSQLProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,4 +25,7 @@ public interface GroupNumberMapper {
 
     @SelectProvider(type = GroupNumberMapperSQLProvider.class, method = "getGroupNumberListSQLBuilder")
     List<GroupNumberDO> getGroupNumberList(Long groupID, Long userID);
+
+    @SelectProvider(type = GroupNumberMapperSQLProvider.class, method = "getJoinedGroupListSQLBuilder")
+    List<JoinedGroupDO> getJoinedGroupList(Long userID);
 }

@@ -47,4 +47,17 @@ public class GroupNumberMapperSQLProvider {
             WHERE("GN.user_id = #{userID}");
         }}.toString();
     }
+
+    public String getJoinedGroupListSQLBuilder(Long userID) {
+        return new SQL() {{
+            SELECT("G.id AS group_id",
+                    "G.name AS group_name",
+                    "G.description AS group_description",
+                    "G.Status AS group_status",
+                    "GN.create_time AS join_time");
+            FROM("maine_group_number AS GN");
+            INNER_JOIN("maine_group AS G ON GN.group_id = G.id");
+            WHERE("GN.user_id = #{userID}");
+        }}.toString();
+    }
 }
