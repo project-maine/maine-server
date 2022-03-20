@@ -1,5 +1,6 @@
 package net.dengzixu.maine.service.impl;
 
+import net.dengzixu.maine.constant.enums.TaskStatus;
 import net.dengzixu.maine.entity.*;
 import net.dengzixu.maine.entity.dataobject.ParticipantDO;
 import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
@@ -78,14 +79,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Deprecated
     public Task getTaskBasicInfo(Long taskID) {
-        Task task = taskMapper.getTask(taskID);
-
-        if (null == task) {
-            throw new TaskNotFoundException();
-        }
-
-        return task;
+        return this.validateAndGet(taskID);
     }
 
     @Override
@@ -192,12 +188,11 @@ public class TaskServiceImpl implements TaskService {
         // 判断任务状态
         Task task = taskMapper.getTask(taskID);
 
-        if (null == task || task.getStatus().equals(2)) {
+        if (null == task ||
+                task.getStatus().equals(TaskStatus.DELETED.value()) ||
+                task.getStatus().equals(TaskStatus.BANNED.value())) {
             throw new TaskNotFoundException();
         }
-//        else if (task.getStatus().equals(1)) {
-//            throw new TaskAlreadyClosed();
-//        }
 
         return task;
     }

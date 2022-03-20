@@ -1,5 +1,6 @@
 package net.dengzixu.maine.web.api.v1.task;
 
+import net.dengzixu.maine.constant.enums.TaskStatus;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.bo.CreateTaskBO;
@@ -73,13 +74,11 @@ public class TaskAdminController {
 
         List<TaskVO> taskVOList = new LinkedList<>();
 
-        taskList.forEach(item -> {
-            // 不显示状态不正常的任务
-            if (item.getStatus().equals(0) || item.getStatus().equals(1)) {
-                taskVOList.add(new TaskVO(item.getId(), item.getTitle(),
-                        item.getDescription(), item.getUserId(), item.getStatus()));
-            }
-        });
+        taskList.stream()
+                .filter(task -> !task.getStatus().equals(TaskStatus.BANNED.value()))
+                .filter(task -> !task.getStatus().equals(TaskStatus.DELETED.value()))
+                .forEach(item -> taskVOList.add(new TaskVO(item.getId(), item.getTitle(),
+                        item.getDescription(), item.getUserId(), item.getStatus())));
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", taskVOList));
     }
@@ -101,7 +100,7 @@ public class TaskAdminController {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
         userService.validate(userID);
 
-        taskService.modifyTaskStatus(taskID, userID, 1);
+        taskService.modifyTaskStatus(taskID, userID, TaskStatus.CLOSED.value());
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("成功"));
     }
@@ -112,7 +111,7 @@ public class TaskAdminController {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
         userService.validate(userID);
 
-        taskService.modifyTaskStatus(taskID, userID, 2);
+        taskService.modifyTaskStatus(taskID, userID, TaskStatus.DELETED.value());
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("成功"));
     }

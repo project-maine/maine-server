@@ -36,8 +36,15 @@ public interface TaskService {
      * @param taskID Task ID
      * @return Task
      */
+    @Deprecated
     Task getTaskBasicInfo(Long taskID);
 
+    /**
+     * 获取考勤任务信息
+     *
+     * @param taskID Task ID
+     * @return TaskInfoDTO
+     */
     TaskInfoDTO getTaskInfo(Long taskID);
 
     /**
