@@ -63,7 +63,7 @@ public interface TaskService {
      * @param userID 生成考勤码 User ID，考勤码仅允许考勤创建者生成
      * @return 考勤码
      */
-    String generateCode(Long taskID, Long userID, Integer tll);
+    String generateCode(Long taskID, Long userID, Integer ttl);
 
     /**
      * 考勤码 参加考勤
