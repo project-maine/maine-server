@@ -58,6 +58,22 @@ public interface GroupService {
     List<GroupNumberDTO> getGroupNumberList(Long groupID, Long userID);
 
     /**
+     * 开启小组
+     *
+     * @param groupID 小组 ID
+     * @param userID  创建者 ID
+     */
+    void open(Long groupID, Long userID);
+
+    /**
+     * 关闭小组
+     *
+     * @param groupID 小组 ID
+     * @param userID  创建者 ID
+     */
+    void close(Long groupID, Long userID);
+
+    /**
      * 删除小组
      *
      * @param groupID 小组 ID
@@ -65,5 +81,13 @@ public interface GroupService {
      */
     void delete(Long groupID, Long userID);
 
+    /**
+     * 获取加入的小组列表
+     *
+     * @param userID 用户 ID
+     * @return List<JoinedGroupDTO>
+     */
     List<JoinedGroupDTO> getJoinedGroupList(Long userID);
+
+    Group getAndValidate(Long groupID);
 }

@@ -105,7 +105,7 @@ public class TaskAdminController {
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("成功"));
     }
 
-    @PostMapping("/{taskID}/delete")
+    @RequestMapping(value = "/{taskID}/delete", method = {RequestMethod.DELETE, RequestMethod.POST})
     public ResponseEntity<APIResponseMap> deleteTask(@RequestHeader("Authorization") String authorization,
                                                      @PathVariable() Long taskID) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);

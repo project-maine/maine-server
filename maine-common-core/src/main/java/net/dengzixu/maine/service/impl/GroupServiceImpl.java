@@ -1,13 +1,12 @@
 package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.Group;
+import net.dengzixu.maine.constant.enums.GroupStatus;
 import net.dengzixu.maine.entity.dataobject.GroupNumberDO;
 import net.dengzixu.maine.entity.dataobject.JoinedGroupDO;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
 import net.dengzixu.maine.entity.dto.JoinedGroupDTO;
-import net.dengzixu.maine.exception.group.GroupNotFoundException;
-import net.dengzixu.maine.exception.group.UserAlreadyJoinGroupException;
-import net.dengzixu.maine.exception.group.UserNotJoinGroupException;
+import net.dengzixu.maine.exception.group.*;
 import net.dengzixu.maine.mapper.group.GroupMapper;
 import net.dengzixu.maine.mapper.group.GroupNumberMapper;
 import net.dengzixu.maine.service.GroupService;
@@ -30,7 +29,6 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMapper groupMapper;
     private final GroupNumberMapper groupNumberMapper;
 
-
     @Autowired
     public GroupServiceImpl(GroupMapper groupMapper, GroupNumberMapper groupNumberMapper) {
         this.groupMapper = groupMapper;
@@ -44,13 +42,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public Group getByID(Long id) {
-        Group group = groupMapper.getByID(id);
-
-        if (null == group) {
-            throw new GroupNotFoundException();
-        }
-
-        return group;
+        return this.getAndValidate(id);
     }
 
     @Override
@@ -101,14 +93,40 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void delete(Long groupID, Long userID) {
-        Group group = getByID(groupID);
+    public void open(Long groupID, Long userID) {
+        Group group = getAndValidate(groupID);
 
-        if (null == group || !group.getUserID().equals(userID)) {
+        if (!group.getUserID().equals(userID)) {
+            throw new GroupNotFoundException();
+        } else if (group.getStatus().equals(GroupStatus.DEFAULT.value())) {
+            throw new GroupAlreadyOpenException();
+        }
+
+        groupMapper.modifyGroupStatus(groupID, GroupStatus.DEFAULT.value());
+    }
+
+    @Override
+    public void close(Long groupID, Long userID) {
+        Group group = getAndValidate(groupID);
+
+        if (!group.getUserID().equals(userID)) {
+            throw new GroupNotFoundException();
+        } else if (group.getStatus().equals(GroupStatus.CLOSED.value())) {
+            throw new GroupAlreadyCloseException();
+        }
+
+        groupMapper.modifyGroupStatus(groupID, GroupStatus.CLOSED.value());
+    }
+
+    @Override
+    public void delete(Long groupID, Long userID) {
+        Group group = getAndValidate(groupID);
+
+        if (!group.getUserID().equals(userID)) {
             throw new GroupNotFoundException();
         }
 
-        groupMapper.modifyGroupStatus(groupID, 1);
+        groupMapper.modifyGroupStatus(groupID, GroupStatus.DELETED.value());
     }
 
     @Override
@@ -126,5 +144,17 @@ public class GroupServiceImpl implements GroupService {
         });
 
         return joinedGroupDTOList;
+    }
+
+    @Override
+    public Group getAndValidate(Long groupID) {
+        Group group = groupMapper.getByID(groupID);
+
+        if (null == group ||
+                group.getStatus().equals(GroupStatus.DELETED.value())) {
+            throw new GroupNotFoundException();
+        }
+
+        return group;
     }
 }

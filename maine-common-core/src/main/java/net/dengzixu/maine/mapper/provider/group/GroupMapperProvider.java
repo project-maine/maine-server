@@ -25,7 +25,6 @@ public class GroupMapperProvider {
             SELECT(ALL_COLUMNS);
             FROM(TABLE_NAME);
             WHERE("id = #{groupID}");
-            WHERE("status = 0");
         }}.toString();
     }
 
@@ -34,7 +33,6 @@ public class GroupMapperProvider {
             SELECT(ALL_COLUMNS);
             FROM(TABLE_NAME);
             WHERE("user_id = #{userID}");
-            WHERE("status = 0");
         }}.toString();
     }
 

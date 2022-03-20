@@ -1,6 +1,8 @@
 package net.dengzixu.maine.web.api.v1.group;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import net.dengzixu.maine.Group;
+import net.dengzixu.maine.constant.enums.GroupStatus;
 import net.dengzixu.maine.entity.bo.GroupAddBO;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
 import net.dengzixu.maine.entity.dto.JoinedGroupDTO;
@@ -67,16 +69,17 @@ public class GroupAdminController {
 
         GroupInfoListVO groupInfoListVO = new GroupInfoListVO(new LinkedList<>());
 
-        groupList.forEach(item -> {
-            groupInfoListVO.groupInfoVOList().add(new GroupInfoVO(item.getId(),
-                    item.getName(),
-                    item.getDescription(),
-                    item.getUserID(),
-                    item.getStatus(),
-                    item.getCreateTime(),
-                    item.getModifyTime()));
-        });
-
+        groupList.stream()
+                .filter(item -> !item.getStatus().equals(GroupStatus.BANNED.value()))
+                .filter(item -> !item.getStatus().equals(GroupStatus.DELETED.value())).forEach(item -> {
+                    groupInfoListVO.groupInfoVOList().add(new GroupInfoVO(item.getId(),
+                            item.getName(),
+                            item.getDescription(),
+                            item.getUserID(),
+                            item.getStatus(),
+                            item.getCreateTime(),
+                            item.getModifyTime()));
+                });
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", groupInfoListVO));
     }
@@ -90,12 +93,37 @@ public class GroupAdminController {
 
         List<GroupNumberDTO> groupNumberDTOList = groupService.getGroupNumberList(groupID, userID);
 
-        List<GroupNumberVO> groupNumberVOList = new LinkedList<>();
+        GroupNumberListVO groupNumberListVO = new GroupNumberListVO(new LinkedList<>());
+
         groupNumberDTOList.forEach(item -> {
-            groupNumberVOList.add(new GroupNumberVO(item.getUserID(), item.getUserName(), item.getJoinTime()));
+            groupNumberListVO.groupNumberVOList().add(new GroupNumberVO(item.getUserID(), item.getUserName(), item.getJoinTime()));
         });
 
-        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", groupNumberVOList));
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", groupNumberListVO));
+    }
+
+    @PostMapping("{groupID}/open")
+    public ResponseEntity<APIResponseMap> open(@RequestHeader("Authorization") String authorization,
+                                               @PathVariable Long groupID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        groupService.open(groupID, userID);
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
+    }
+
+    @PostMapping("{groupID}/close")
+    public ResponseEntity<APIResponseMap> close(@RequestHeader("Authorization") String authorization,
+                                                @PathVariable Long groupID) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        groupService.close(groupID, userID);
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 
     @RequestMapping(value = "{groupID}/delete", method = {RequestMethod.DELETE, RequestMethod.POST})
@@ -120,13 +148,17 @@ public class GroupAdminController {
 
         JoinedGroupListVO joinedGroupListVO = new JoinedGroupListVO(new LinkedList<>());
 
-        joinedGroupDTOList.forEach(item -> {
-            joinedGroupListVO.joinedGroupList().add(new JoinedGroupVO(item.groupID(),
-                    item.groupName(),
-                    item.groupDescription(),
-                    item.groupStatus(),
-                    item.joinTime()));
-        });
+        joinedGroupDTOList
+                .stream()
+                .filter(item -> !item.groupStatus().equals(GroupStatus.BANNED.value()))
+                .filter(item -> !item.groupStatus().equals(GroupStatus.DELETED.value()))
+                .forEach(item -> {
+                    joinedGroupListVO.joinedGroupList().add(new JoinedGroupVO(item.groupID(),
+                            item.groupName(),
+                            item.groupDescription(),
+                            item.groupStatus(),
+                            item.joinTime()));
+                });
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", joinedGroupListVO));
 
