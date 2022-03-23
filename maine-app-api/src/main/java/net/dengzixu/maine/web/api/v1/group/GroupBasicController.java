@@ -1,8 +1,7 @@
 package net.dengzixu.maine.web.api.v1.group;
 
 import net.dengzixu.maine.Group;
-import net.dengzixu.maine.entity.bo.GroupAddBO;
-import net.dengzixu.maine.entity.vo.GroupInfoVO;
+import net.dengzixu.maine.entity.vo.group.GroupInfoVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.GroupService;
@@ -11,9 +10,7 @@ import net.dengzixu.maine.utils.JWTUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 

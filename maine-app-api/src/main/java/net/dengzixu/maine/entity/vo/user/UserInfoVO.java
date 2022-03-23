@@ -1,4 +1,4 @@
-package net.dengzixu.maine.entity.vo;
+package net.dengzixu.maine.entity.vo.user;
 
 import lombok.Data;
 

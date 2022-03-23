@@ -1,4 +1,4 @@
-package net.dengzixu.maine.entity.bo;
+package net.dengzixu.maine.entity.bo.task;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

@@ -1,10 +1,10 @@
 package net.dengzixu.maine.web.api.v1.auth;
 
 import net.dengzixu.maine.entity.User;
-import net.dengzixu.maine.entity.bo.UserLoginBO;
-import net.dengzixu.maine.entity.bo.UserRegisterBO;
-import net.dengzixu.maine.entity.bo.UserSMSLoginBO;
-import net.dengzixu.maine.entity.bo.UserSendSMSBO;
+import net.dengzixu.maine.entity.bo.user.UserLoginBO;
+import net.dengzixu.maine.entity.bo.user.UserRegisterBO;
+import net.dengzixu.maine.entity.bo.user.UserSMSLoginBO;
+import net.dengzixu.maine.entity.bo.user.UserSendSMSBO;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;

@@ -1,4 +1,4 @@
-package net.dengzixu.maine.entity.bo;
+package net.dengzixu.maine.entity.bo.task;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;

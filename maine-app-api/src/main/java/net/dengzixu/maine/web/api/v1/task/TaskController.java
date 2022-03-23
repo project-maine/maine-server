@@ -1,11 +1,10 @@
 package net.dengzixu.maine.web.api.v1.task;
 
-import net.dengzixu.maine.entity.bo.AttendanceCreateBasicBO;
-import net.dengzixu.maine.entity.bo.TakeByCodeBO;
+import net.dengzixu.maine.entity.bo.task.AttendanceCreateBasicBO;
+import net.dengzixu.maine.entity.bo.task.TakeByCodeBO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
-import net.dengzixu.maine.entity.vo.GenerateCodeVO;
-import net.dengzixu.maine.entity.vo.TaskInfoVO;
-import net.dengzixu.maine.entity.vo.TaskSettingVO;
+import net.dengzixu.maine.entity.vo.task.TaskInfoVO;
+import net.dengzixu.maine.entity.vo.task.TaskSettingVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.TaskService;

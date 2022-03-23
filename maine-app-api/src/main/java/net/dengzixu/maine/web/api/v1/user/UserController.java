@@ -1,10 +1,9 @@
 package net.dengzixu.maine.web.api.v1.user;
 
 import net.dengzixu.maine.entity.User;
-import net.dengzixu.maine.entity.vo.UserInfoVO;
+import net.dengzixu.maine.entity.vo.user.UserInfoVO;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
-import net.dengzixu.maine.service.CommonService;
 import net.dengzixu.maine.service.UserService;
 import net.dengzixu.maine.utils.JWTUtils;
 import org.slf4j.Logger;

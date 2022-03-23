@@ -1,12 +1,11 @@
 package net.dengzixu.maine.web.api.v1.group;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import net.dengzixu.maine.Group;
 import net.dengzixu.maine.constant.enums.GroupStatus;
-import net.dengzixu.maine.entity.bo.GroupAddBO;
+import net.dengzixu.maine.entity.bo.group.GroupAddBO;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
 import net.dengzixu.maine.entity.dto.JoinedGroupDTO;
-import net.dengzixu.maine.entity.vo.*;
+import net.dengzixu.maine.entity.vo.group.*;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.GroupService;

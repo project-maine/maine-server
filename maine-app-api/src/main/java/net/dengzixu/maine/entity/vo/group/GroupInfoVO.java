@@ -1,4 +1,4 @@
-package net.dengzixu.maine.entity.vo;
+package net.dengzixu.maine.entity.vo.group;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
