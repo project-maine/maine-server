@@ -117,7 +117,7 @@ public class TaskAdminController {
     }
 
     @GetMapping("/{taskID}/participant/list")
-    public ResponseEntity<APIResponseMap> getTaskTaker(@RequestHeader("Authorization") String authorization,
+    public ResponseEntity<APIResponseMap> getParticipantList(@RequestHeader("Authorization") String authorization,
                                                        @PathVariable() Long taskID) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
         userService.validate(userID);
