@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
@@ -40,7 +41,7 @@ public class GroupAdminController {
 
     @PostMapping("/create")
     public ResponseEntity<APIResponseMap> add(@RequestHeader("Authorization") String authorization,
-                                              @RequestBody GroupAddBO groupAddBO,
+                                              @Validated @RequestBody GroupAddBO groupAddBO,
                                               BindingResult bindingResult) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
 
