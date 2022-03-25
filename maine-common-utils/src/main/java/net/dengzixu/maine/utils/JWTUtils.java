@@ -9,7 +9,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.dengzixu.maine.config.MaineConfig;
-import org.bouncycastle.util.encoders.Base64;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class JWTUtils {
         this.algorithm = Algorithm.HMAC512(maineConfig.JWT().Token());
     }
 
-    public String encode(Map<String, Object> payload) {
+    public String encode(Map<String, String> payload) {
         return JWT.create()
                 .withExpiresAt(this.getExpireTime())
                 .withIssuer(String.valueOf(System.currentTimeMillis()))
@@ -41,6 +41,14 @@ public class JWTUtils {
     }
 
     public String encode(long id) {
+
+        return this.encode(String.valueOf(id));
+//        return this.encode(new LinkedHashMap<>() {{
+//            put("id", id);
+//        }});
+    }
+
+    public String encode(String id) {
         return this.encode(new LinkedHashMap<>() {{
             put("id", id);
         }});
@@ -65,11 +73,13 @@ public class JWTUtils {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
+        System.out.println(decodedJWT.getPayload());
+
         try {
-            Map<String, Object> payloadMap = objectMapper.readValue(new String(Base64.decode(decodedJWT.getPayload())),
+            Map<String, Object> payloadMap = objectMapper.readValue(new String(Base64.decodeBase64(decodedJWT.getPayload())),
                     new TypeReference<>() {
                     });
-            return OptionalLong.of(((Number) payloadMap.get("id")).longValue());
+            return OptionalLong.of(Long.parseLong((String) payloadMap.get("id")));
         } catch (JsonProcessingException e) {
             logger.error("JWT 解码失败", e);
             return OptionalLong.empty();
