@@ -1,13 +1,13 @@
 package net.dengzixu.maine.web.api.v1.task;
 
+import net.dengzixu.maine.constant.enums.TaskStatus;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.bo.task.AttendanceCreateBasicBO;
 import net.dengzixu.maine.entity.bo.task.GenerateTokenBO;
 import net.dengzixu.maine.entity.bo.task.TakeByCodeBO;
+import net.dengzixu.maine.entity.dto.TakeRecordDTO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
-import net.dengzixu.maine.entity.vo.task.TaskInfoVO;
-import net.dengzixu.maine.entity.vo.task.TaskSettingVO;
-import net.dengzixu.maine.entity.vo.task.TaskVO;
+import net.dengzixu.maine.entity.vo.task.*;
 import net.dengzixu.maine.exception.common.TokenExpiredException;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.TaskService;
@@ -22,6 +22,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/v1/task")
@@ -161,5 +164,29 @@ public class TaskController {
                 task.getStatus());
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", taskVO));
+    }
+
+    @GetMapping("/history")
+    public ResponseEntity<APIResponseMap> history(@RequestHeader("Authorization") String authorization) {
+        long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+
+        userService.validate(userID);
+
+        List<TakeRecordDTO> takeRecordDTOList = taskService.getTakeRecord(userID);
+
+        HistoryListVO historyListVO = new HistoryListVO(new LinkedList<>());
+
+        takeRecordDTOList.stream()
+                .filter(i -> !TaskStatus.BANNED.value().equals(i.taskStatus()))
+                .filter(i -> !TaskStatus.DELETED.value().equals(i.taskStatus()))
+                .forEach(item -> {
+                    historyListVO.historyVOList().add(new HistoryVO(item.taskID(),
+                            item.recordStatus(),
+                            item.recordCreateTime(),
+                            item.taskTitle(),
+                            item.taskDescription(),
+                            item.taskStatus()));
+                });
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", historyListVO));
     }
 }

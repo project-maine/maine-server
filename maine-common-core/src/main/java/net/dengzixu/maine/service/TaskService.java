@@ -3,6 +3,7 @@ package net.dengzixu.maine.service;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.dto.ParticipantDTO;
+import net.dengzixu.maine.entity.dto.TakeRecordDTO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 import net.dengzixu.maine.entity.dto.TokenDTO;
 
@@ -62,7 +63,7 @@ public interface TaskService {
      * @param taskID Task ID
      * @param userID 参加考勤的 User ID
      */
-    void take(Long taskID, Long userID,String token);
+    void take(Long taskID, Long userID, String token);
 
     /**
      * 生成考勤码
@@ -113,6 +114,19 @@ public interface TaskService {
      */
     String generateToken(TokenDTO tokenDTO);
 
+    /**
+     * 根据考勤码获取 Task
+     *
+     * @param code 考勤码
+     * @return Task
+     */
     Task getTaskByTakeCode(String code);
 
+    /**
+     * 获取考勤记录
+     *
+     * @param userID 用户 ID
+     * @return List<TakeRecordDTO>
+     */
+    List<TakeRecordDTO> getTakeRecord(Long userID);
 }

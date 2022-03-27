@@ -33,4 +33,14 @@ public class TaskRecordMapperProvider {
             WHERE("task_id = #{taskID}");
         }}.toString();
     }
+
+    public String listTakeRecordSQLBuilder(Long userID) {
+        return new SQL() {{
+            SELECT("R.task_id AS task_id", "R.status AS record_status", "R.create_time AS record_create_time",
+                    "T.title AS task_title", "T.description AS task_description", "T.status AS task_status");
+            FROM("maine_attendance_record AS R");
+            INNER_JOIN("maine_attendance_task AS T ON R.task_id = T.id");
+            WHERE("R.user_id = #{userid}");
+        }}.toString();
+    }
 }

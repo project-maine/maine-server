@@ -3,8 +3,10 @@ package net.dengzixu.maine.service.impl;
 import net.dengzixu.maine.constant.enums.TaskStatus;
 import net.dengzixu.maine.entity.*;
 import net.dengzixu.maine.entity.dataobject.ParticipantDO;
+import net.dengzixu.maine.entity.dataobject.TakeRecordDO;
 import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
 import net.dengzixu.maine.entity.dto.ParticipantDTO;
+import net.dengzixu.maine.entity.dto.TakeRecordDTO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
 import net.dengzixu.maine.entity.dto.TokenDTO;
 import net.dengzixu.maine.exception.BusinessException;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -239,6 +242,25 @@ public class TaskServiceImpl implements TaskService {
         }
 
         return this.validateAndGet(taskCode.getTaskID());
+    }
+
+    @Override
+    public List<TakeRecordDTO> getTakeRecord(Long userID) {
+
+        List<TakeRecordDO> takeRecordDOList = taskRecordMapper.listTakeRecord(userID);
+
+        List<TakeRecordDTO> takeRecordDTOList = new LinkedList<>();
+
+        takeRecordDOList.forEach(item -> {
+            takeRecordDTOList.add(new TakeRecordDTO(item.getTaskID(),
+                    item.getRecordStatus(),
+                    item.getRecordCreateTime(),
+                    item.getTaskTitle(),
+                    item.getTaskDescription(),
+                    item.getTaskStatus()));
+        });
+
+        return takeRecordDTOList;
     }
 
     @Transactional
