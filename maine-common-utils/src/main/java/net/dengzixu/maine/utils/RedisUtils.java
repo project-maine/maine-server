@@ -23,8 +23,8 @@ public class RedisUtils {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public void getAndDeleteKey(String key) {
-        redisTemplate.opsForValue().getAndDelete(key);
+    public String getAndDeleteKey(String key) {
+        return redisTemplate.opsForValue().getAndDelete(key);
     }
 
     public void setKey(String key, String value) {
@@ -33,5 +33,9 @@ public class RedisUtils {
 
     public void setKey(String key, String value, long ttl) {
         redisTemplate.opsForValue().set(key, value, ttl, TimeUnit.SECONDS);
+    }
+
+    public void deleteKey(String key) {
+        redisTemplate.delete(key);
     }
 }

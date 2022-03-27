@@ -6,11 +6,9 @@ import net.dengzixu.maine.entity.dataobject.ParticipantDO;
 import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
 import net.dengzixu.maine.entity.dto.ParticipantDTO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
+import net.dengzixu.maine.entity.dto.TokenDTO;
 import net.dengzixu.maine.exception.BusinessException;
-import net.dengzixu.maine.exception.task.TaskAlreadyTakeException;
-import net.dengzixu.maine.exception.task.TaskAlreadyClosed;
-import net.dengzixu.maine.exception.task.TaskCodeErrorException;
-import net.dengzixu.maine.exception.task.TaskNotFoundException;
+import net.dengzixu.maine.exception.task.*;
 import net.dengzixu.maine.mapper.task.TaskCodeMapper;
 import net.dengzixu.maine.mapper.task.TaskMapper;
 import net.dengzixu.maine.mapper.task.TaskRecordMapper;
@@ -20,6 +18,8 @@ import net.dengzixu.maine.utils.RandomGenerator;
 import net.dengzixu.maine.utils.RedisUtils;
 import net.dengzixu.maine.utils.SerializeUtils;
 import net.dengzixu.maine.utils.SnowFlake;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -122,8 +123,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void webTake(Long taskID, Long takeUserID) {
-        this.take(taskID, takeUserID, TakeType.WEB);
+    public void take(Long taskID, Long takeUserID, String token) {
+        this._take(taskID, takeUserID, token);
     }
 
     @Override
@@ -169,7 +170,7 @@ public class TaskServiceImpl implements TaskService {
         long taskID = taskCode.getTaskID();
 
         // 进行考勤
-        this.take(taskID, takeUserID, TakeType.CODE);
+        this._take(taskID, takeUserID, "");
     }
 
     @Override
@@ -212,20 +213,81 @@ public class TaskServiceImpl implements TaskService {
         return participantDTOList;
     }
 
-    private void take(Long taskID, Long takeUserID, TakeType takeType) {
+    @Override
+    public String generateToken(TokenDTO tokenDTO) {
+
+        String token = UUID.randomUUID().toString();
+
+        try {
+            byte[] bytes = SerializeUtils.serialize(tokenDTO);
+
+            redisUtils.setKey("task:token:" + token, Base64.encodeBase64String(bytes), 5 * 60);
+        } catch (IOException e) {
+            logger.error("序列化发生错误", e);
+            throw new BusinessException("系统错误", 500);
+        }
+
+        return token;
+    }
+
+    @Override
+    public Task getTaskByTakeCode(String code) {
+        TaskCode taskCode = taskCodeMapper.getByCode(code, false);
+
+        if (null == taskCode) {
+            throw new TaskNotFoundException();
+        }
+
+        return this.validateAndGet(taskCode.getTaskID());
+    }
+
+    @Transactional
+    public void _take(Long taskID, Long userID, String token) {
+        String base64TokenDTO = redisUtils.getKey("task:token:" + token);
+
+        // 判断 Token 是否存在
+        if (StringUtils.isBlank(base64TokenDTO)) {
+            logger.warn("找不到Token: {}", token);
+            throw new InvalidTokenException();
+        }
+
+        // 反序列化Token
+        TokenDTO tokenDTO;
+        try {
+            tokenDTO = SerializeUtils.deserialize(Base64.decodeBase64(base64TokenDTO));
+        } catch (IOException | ClassNotFoundException e) {
+            logger.error("反序列化发生错误", e);
+            throw new BusinessException("系统错误", 500);
+        }
+
+        // 验证 Token 是否有效
+        if (!tokenDTO.taskID().equals(taskID) ||
+                !tokenDTO.userID().equals(userID)) {
+            logger.warn("Token 信息错误，Token UserID: {}，实际 UserID: {}，Token TaskID: {}，实际 TaskID:{}",
+                    tokenDTO.userID(), userID, tokenDTO.taskID(), taskID);
+            throw new InvalidTokenException();
+        }
+
+        // 校验时间戳
+        if ((System.currentTimeMillis() - tokenDTO.timestamp()) > 5 * 60 * 1000) {
+            logger.warn("Token[{}] 已过期", token);
+            throw new InvalidTokenException();
+        }
+
+
         // 判断任务状态
         Task task = validateAndGet(taskID);
 
         // 判断是否已经参加过考勤了
-        if (null != taskRecordMapper.getRecordByTaskIDAndUserID(taskID, takeUserID)) {
+        if (null != taskRecordMapper.getRecordByTaskIDAndUserID(taskID, userID)) {
             throw new TaskAlreadyTakeException();
         }
 
-        // 写入考勤记录
-        taskRecordMapper.addRecord(taskID, takeUserID);
-    }
+        // 全部通过后删除Token
+        redisUtils.deleteKey("task:token:" + token);
 
-    private enum TakeType {
-        CODE, WEB;
+
+        // 写入考勤记录
+        taskRecordMapper.addRecord(taskID, userID);
     }
 }

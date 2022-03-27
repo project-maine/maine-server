@@ -4,6 +4,7 @@ import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.dto.ParticipantDTO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
+import net.dengzixu.maine.entity.dto.TokenDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -56,12 +57,12 @@ public interface TaskService {
     List<Task> getTaskListByUserID(Long userID);
 
     /**
-     * Web端 参加考勤
+     * 参加考勤
      *
-     * @param taskID     Task ID
-     * @param takeUserID 参加考勤的 User ID
+     * @param taskID Task ID
+     * @param userID 参加考勤的 User ID
      */
-    void webTake(Long taskID, Long takeUserID);
+    void take(Long taskID, Long userID,String token);
 
     /**
      * 生成考勤码
@@ -104,4 +105,14 @@ public interface TaskService {
      * @return List<User>
      */
     List<ParticipantDTO> getParticipantList(Long taskID);
+
+    /**
+     * 生成考勤用 Token
+     *
+     * @return Token
+     */
+    String generateToken(TokenDTO tokenDTO);
+
+    Task getTaskByTakeCode(String code);
+
 }

@@ -73,13 +73,19 @@ public class JWTUtils {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        System.out.println(decodedJWT.getPayload());
-
         try {
             Map<String, Object> payloadMap = objectMapper.readValue(new String(Base64.decodeBase64(decodedJWT.getPayload())),
                     new TypeReference<>() {
                     });
-            return OptionalLong.of(Long.parseLong((String) payloadMap.get("id")));
+
+            if (payloadMap.get("id") instanceof Long id) {
+                return OptionalLong.of(id);
+            } else if (payloadMap.get("id") instanceof String id) {
+                return OptionalLong.of(Long.parseLong((String) payloadMap.get("id")));
+            } else {
+                return OptionalLong.empty();
+            }
+
         } catch (JsonProcessingException e) {
             logger.error("JWT 解码失败", e);
             return OptionalLong.empty();
