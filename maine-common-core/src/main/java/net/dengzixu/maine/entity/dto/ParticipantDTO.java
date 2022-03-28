@@ -6,5 +6,7 @@ import lombok.Data;
 public class ParticipantDTO {
     private Long userID;
     private String userName;
+    private String serialID;
+    private Integer recordStatus;
     private String takeTime;
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class TakeRecordDTO {
+    private String serialID;
     private Long taskID;
     private Integer recordStatus;
     private String recordCreateTime;

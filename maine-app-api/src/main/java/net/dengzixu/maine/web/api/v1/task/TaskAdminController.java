@@ -120,7 +120,7 @@ public class TaskAdminController {
 
     @GetMapping("/{taskID}/participant/list")
     public ResponseEntity<APIResponseMap> getParticipantList(@RequestHeader("Authorization") String authorization,
-                                                       @PathVariable() Long taskID) {
+                                                             @PathVariable() Long taskID) {
         long userID = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
         userService.validate(userID);
 
@@ -132,7 +132,10 @@ public class TaskAdminController {
         // BeanCopy
         participantList.forEach(item -> participantListVO.participantVOList().add(new ParticipantVO(item.getUserID(),
                 item.getUserName(),
-                item.getTakeTime())));
+                item.getSerialID(),
+                item.getRecordStatus(),
+                item.getTakeTime())
+        ));
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", participantListVO));
     }

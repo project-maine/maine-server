@@ -180,7 +180,8 @@ public class TaskController {
                 .filter(i -> !TaskStatus.BANNED.value().equals(i.getTaskStatus()))
                 .filter(i -> !TaskStatus.DELETED.value().equals(i.getTaskStatus()))
                 .forEach(item -> {
-                    historyListVO.historyVOList().add(new HistoryVO(item.getTaskID(),
+                    historyListVO.historyVOList().add(new HistoryVO(item.getSerialID(),
+                            item.getTaskID(),
                             item.getRecordStatus(),
                             item.getRecordCreateTime(),
                             item.getTaskTitle(),

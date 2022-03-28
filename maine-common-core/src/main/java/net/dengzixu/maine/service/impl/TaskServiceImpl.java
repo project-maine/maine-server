@@ -286,6 +286,6 @@ public class TaskServiceImpl implements TaskService {
 
 
         // 写入考勤记录
-        taskRecordMapper.addRecord(taskID, userID);
+        taskRecordMapper.addRecord(UUID.randomUUID().toString(), taskID, userID);
     }
 }
