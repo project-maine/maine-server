@@ -1,6 +1,7 @@
 package net.dengzixu.maine.web.api.v1.group;
 
 import net.dengzixu.maine.Group;
+import net.dengzixu.maine.constant.enums.GroupNumberStatus;
 import net.dengzixu.maine.constant.enums.GroupStatus;
 import net.dengzixu.maine.entity.bo.group.GroupAddBO;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
@@ -148,19 +149,17 @@ public class GroupAdminController {
 
         JoinedGroupListVO joinedGroupListVO = new JoinedGroupListVO(new LinkedList<>());
 
-        joinedGroupDTOList
-                .stream()
-                .filter(item -> !item.groupStatus().equals(GroupStatus.BANNED.value()))
-                .filter(item -> !item.groupStatus().equals(GroupStatus.DELETED.value()))
-                .forEach(item -> {
-                    joinedGroupListVO.joinedGroupList().add(new JoinedGroupVO(item.groupID(),
-                            item.groupName(),
-                            item.groupDescription(),
-                            item.groupStatus(),
-                            item.joinTime()));
-                });
+        joinedGroupDTOList.stream()
+                .filter(item -> !item.getGroupStatus().equals(GroupStatus.BANNED.value()))
+                .filter(item -> !item.getGroupStatus().equals(GroupStatus.DELETED.value()))
+                .filter(item -> !item.getGroupNumberStatus().equals(GroupNumberStatus.EXITED.value()))
+                .forEach(item -> joinedGroupListVO.joinedGroupList()
+                        .add(new JoinedGroupVO(item.getGroupID(),
+                                item.getGroupName(),
+                                item.getGroupDescription(),
+                                item.getGroupStatus(),
+                                item.getJoinTime())));
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", joinedGroupListVO));
-
     }
 }

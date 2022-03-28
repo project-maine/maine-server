@@ -1,6 +1,6 @@
 package net.dengzixu.maine.mapper.task;
 
-import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
+import net.dengzixu.maine.entity.TaskSetting;
 import net.dengzixu.maine.mapper.provider.task.TaskSettingMapperProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
@@ -15,6 +15,5 @@ public interface TaskSettingMapper {
     void addSetting(Long taskID, byte[] setting);
 
     @SelectProvider(type = TaskSettingMapperProvider.class, method = "getSettingSQLBuilder")
-    @ResultType(byte[].class)
-    TaskSettingDO getSetting(Long taskID);
+    TaskSetting getSetting(Long taskID);
 }

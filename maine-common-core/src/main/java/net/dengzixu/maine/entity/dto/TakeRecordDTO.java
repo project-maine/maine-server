@@ -1,9 +1,13 @@
 package net.dengzixu.maine.entity.dto;
 
-public record TakeRecordDTO(Long taskID,
-                            Integer recordStatus,
-                            String recordCreateTime,
-                            String taskTitle,
-                            String taskDescription,
-                            Integer taskStatus) {
+import lombok.Data;
+
+@Data
+public class TakeRecordDTO {
+    private Long taskID;
+    private Integer recordStatus;
+    private String recordCreateTime;
+    private String taskTitle;
+    private String taskDescription;
+    private Integer taskStatus;
 }

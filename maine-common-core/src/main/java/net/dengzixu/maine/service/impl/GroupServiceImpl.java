@@ -2,8 +2,6 @@ package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.Group;
 import net.dengzixu.maine.constant.enums.GroupStatus;
-import net.dengzixu.maine.entity.dataobject.GroupNumberDO;
-import net.dengzixu.maine.entity.dataobject.JoinedGroupDO;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
 import net.dengzixu.maine.entity.dto.JoinedGroupDTO;
 import net.dengzixu.maine.exception.group.*;
@@ -16,8 +14,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -76,20 +72,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupNumberDTO> getGroupNumberList(Long groupID, Long userID) {
-
-        List<GroupNumberDO> groupNumberDOList = groupNumberMapper.getGroupNumberList(groupID, userID);
-
-        List<GroupNumberDTO> groupNumberDTOList = new LinkedList<>();
-
-        groupNumberDOList.forEach(item -> {
-            groupNumberDTOList.add(new GroupNumberDTO() {{
-                setUserID(item.getUserID());
-                setUserName(item.getUserName());
-                setJoinTime(item.getCreateTime());
-            }});
-        });
-
-        return groupNumberDTOList;
+        return groupNumberMapper.getGroupNumberList(groupID, userID);
     }
 
     @Override
@@ -131,19 +114,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<JoinedGroupDTO> getJoinedGroupList(Long userID) {
-        List<JoinedGroupDO> joinedGroupDOList = groupNumberMapper.getJoinedGroupList(userID);
-
-        List<JoinedGroupDTO> joinedGroupDTOList = new LinkedList<>();
-
-        joinedGroupDOList.forEach(item -> {
-            joinedGroupDTOList.add(new JoinedGroupDTO(item.getGroupID(),
-                    item.getGroupName(),
-                    item.getGroupDescription(),
-                    item.getGroupStatus(),
-                    item.getJoinTime()));
-        });
-
-        return joinedGroupDTOList;
+        return groupNumberMapper.getJoinedGroupList(userID);
     }
 
     @Override

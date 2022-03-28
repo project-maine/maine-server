@@ -1,6 +1,10 @@
 package net.dengzixu.maine.entity.dto;
 
-public record ParticipantDTO(Long userID,
-                             String userName,
-                             String takeTime) {
+import lombok.Data;
+
+@Data
+public class ParticipantDTO {
+    private Long userID;
+    private String userName;
+    private String takeTime;
 }

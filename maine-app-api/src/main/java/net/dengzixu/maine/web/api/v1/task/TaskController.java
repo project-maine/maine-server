@@ -177,15 +177,15 @@ public class TaskController {
         HistoryListVO historyListVO = new HistoryListVO(new LinkedList<>());
 
         takeRecordDTOList.stream()
-                .filter(i -> !TaskStatus.BANNED.value().equals(i.taskStatus()))
-                .filter(i -> !TaskStatus.DELETED.value().equals(i.taskStatus()))
+                .filter(i -> !TaskStatus.BANNED.value().equals(i.getTaskStatus()))
+                .filter(i -> !TaskStatus.DELETED.value().equals(i.getTaskStatus()))
                 .forEach(item -> {
-                    historyListVO.historyVOList().add(new HistoryVO(item.taskID(),
-                            item.recordStatus(),
-                            item.recordCreateTime(),
-                            item.taskTitle(),
-                            item.taskDescription(),
-                            item.taskStatus()));
+                    historyListVO.historyVOList().add(new HistoryVO(item.getTaskID(),
+                            item.getRecordStatus(),
+                            item.getRecordCreateTime(),
+                            item.getTaskTitle(),
+                            item.getTaskDescription(),
+                            item.getTaskStatus()));
                 });
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", historyListVO));
     }

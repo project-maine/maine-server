@@ -1,10 +1,10 @@
 package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.maine.constant.enums.TaskStatus;
-import net.dengzixu.maine.entity.*;
-import net.dengzixu.maine.entity.dataobject.ParticipantDO;
-import net.dengzixu.maine.entity.dataobject.TakeRecordDO;
-import net.dengzixu.maine.entity.dataobject.TaskSettingDO;
+import net.dengzixu.maine.entity.Task;
+import net.dengzixu.maine.entity.TaskCode;
+import net.dengzixu.maine.entity.TaskSetting;
+import net.dengzixu.maine.entity.TaskSettingItem;
 import net.dengzixu.maine.entity.dto.ParticipantDTO;
 import net.dengzixu.maine.entity.dto.TakeRecordDTO;
 import net.dengzixu.maine.entity.dto.TaskInfoDTO;
@@ -30,8 +30,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 
@@ -108,10 +106,10 @@ public class TaskServiceImpl implements TaskService {
         taskInfoDTO.setCreateTime(task.getCreateTime());
 
 
-        TaskSettingDO taskSettingDO = taskSettingMapper.getSetting(taskID);
+        TaskSetting taskSetting = taskSettingMapper.getSetting(taskID);
 
         try {
-            TaskSettingItem taskSettingItem = SerializeUtils.deserialize(taskSettingDO.getSetting());
+            TaskSettingItem taskSettingItem = SerializeUtils.deserialize(taskSetting.getSetting());
             taskInfoDTO.setTaskSettingItem(taskSettingItem);
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -205,15 +203,7 @@ public class TaskServiceImpl implements TaskService {
     public List<ParticipantDTO> getParticipantList(Long taskID) {
         this.validateAndGet(taskID);
 
-        List<ParticipantDO> participantDOList = taskRecordMapper.getParticipantListByTaskID(taskID);
-
-        List<ParticipantDTO> participantDTOList = new ArrayList<>();
-
-        participantDOList.forEach(item -> {
-            ParticipantDTO participantDTO = new ParticipantDTO(item.getUserID(), item.getUserName(), item.getTakeTime());
-            participantDTOList.add(participantDTO);
-        });
-        return participantDTOList;
+        return taskRecordMapper.getParticipantListByTaskID(taskID);
     }
 
     @Override
@@ -246,21 +236,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TakeRecordDTO> getTakeRecord(Long userID) {
-
-        List<TakeRecordDO> takeRecordDOList = taskRecordMapper.listTakeRecord(userID);
-
-        List<TakeRecordDTO> takeRecordDTOList = new LinkedList<>();
-
-        takeRecordDOList.forEach(item -> {
-            takeRecordDTOList.add(new TakeRecordDTO(item.getTaskID(),
-                    item.getRecordStatus(),
-                    item.getRecordCreateTime(),
-                    item.getTaskTitle(),
-                    item.getTaskDescription(),
-                    item.getTaskStatus()));
-        });
-
-        return takeRecordDTOList;
+        return taskRecordMapper.listTakeRecord(userID);
     }
 
     @Transactional

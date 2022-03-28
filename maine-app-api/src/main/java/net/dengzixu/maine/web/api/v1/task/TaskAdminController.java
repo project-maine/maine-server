@@ -130,9 +130,9 @@ public class TaskAdminController {
         ParticipantListVO participantListVO = new ParticipantListVO(new LinkedList<>());
 
         // BeanCopy
-        participantList.forEach(item -> participantListVO.participantVOList().add(new ParticipantVO(item.userID(),
-                item.userName(),
-                item.takeTime())));
+        participantList.forEach(item -> participantListVO.participantVOList().add(new ParticipantVO(item.getUserID(),
+                item.getUserName(),
+                item.getTakeTime())));
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", participantListVO));
     }

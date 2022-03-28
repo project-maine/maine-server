@@ -54,6 +54,7 @@ public class GroupNumberMapperSQLProvider {
                     "G.name AS group_name",
                     "G.description AS group_description",
                     "G.Status AS group_status",
+                    "GN.status AS group_number_status",
                     "GN.create_time AS join_time");
             FROM("maine_group_number AS GN");
             INNER_JOIN("maine_group AS G ON GN.group_id = G.id");

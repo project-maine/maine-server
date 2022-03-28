@@ -1,8 +1,13 @@
 package net.dengzixu.maine.entity.dto;
 
-public record JoinedGroupDTO(Long groupID,
-                             String groupName,
-                             String groupDescription,
-                             Integer groupStatus,
-                             String joinTime) {
+import lombok.Data;
+
+@Data
+public class JoinedGroupDTO {
+    private Long groupID;
+    private String groupName;
+    private String groupDescription;
+    private Integer groupStatus;
+    private Integer groupNumberStatus;
+    private String joinTime;
 }

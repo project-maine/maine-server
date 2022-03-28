@@ -1,8 +1,8 @@
 package net.dengzixu.maine.mapper.task;
 
 import net.dengzixu.maine.entity.TaskRecord;
-import net.dengzixu.maine.entity.dataobject.ParticipantDO;
-import net.dengzixu.maine.entity.dataobject.TakeRecordDO;
+import net.dengzixu.maine.entity.dto.ParticipantDTO;
+import net.dengzixu.maine.entity.dto.TakeRecordDTO;
 import net.dengzixu.maine.mapper.provider.task.TaskRecordMapperProvider;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,8 +21,8 @@ public interface TaskRecordMapper {
     TaskRecord getRecordByTaskIDAndUserID(Long taskID, Long userID);
 
     @SelectProvider(type = TaskRecordMapperProvider.class, method = "getParticipantListByTaskIDSQLBuilder")
-    List<ParticipantDO> getParticipantListByTaskID(Long taskID);
+    List<ParticipantDTO> getParticipantListByTaskID(Long taskID);
 
     @SelectProvider(type = TaskRecordMapperProvider.class, method = "listTakeRecordSQLBuilder")
-    List<TakeRecordDO> listTakeRecord(Long userID);
+    List<TakeRecordDTO> listTakeRecord(Long userID);
 }
