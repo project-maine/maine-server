@@ -15,6 +15,7 @@ import net.dengzixu.maine.mapper.task.TaskCodeMapper;
 import net.dengzixu.maine.mapper.task.TaskMapper;
 import net.dengzixu.maine.mapper.task.TaskRecordMapper;
 import net.dengzixu.maine.mapper.task.TaskSettingMapper;
+import net.dengzixu.maine.service.GroupService;
 import net.dengzixu.maine.service.TaskService;
 import net.dengzixu.maine.utils.RandomGenerator;
 import net.dengzixu.maine.utils.RedisUtils;
@@ -32,6 +33,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -41,6 +43,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRecordMapper taskRecordMapper;
     private final TaskCodeMapper taskCodeMapper;
     private final TaskSettingMapper taskSettingMapper;
+    private final GroupService groupService;
 
     private final RedisUtils redisUtils;
 
@@ -49,11 +52,13 @@ public class TaskServiceImpl implements TaskService {
                            TaskRecordMapper taskRecordMapper,
                            TaskCodeMapper taskCodeMapper,
                            TaskSettingMapper taskSettingMapper,
+                           GroupService groupService,
                            RedisUtils redisUtils) {
         this.taskMapper = taskMapper;
         this.taskRecordMapper = taskRecordMapper;
         this.taskCodeMapper = taskCodeMapper;
         this.taskSettingMapper = taskSettingMapper;
+        this.groupService = groupService;
         this.redisUtils = redisUtils;
     }
 
@@ -272,9 +277,32 @@ public class TaskServiceImpl implements TaskService {
             throw new InvalidTokenException();
         }
 
-
         // 判断任务状态
         Task task = validateAndGet(taskID);
+
+        TaskSetting taskSetting = taskSettingMapper.getSetting(task.getId());
+
+        // 判断小组限制
+        TaskSettingItem taskSettingItem;
+        try {
+            taskSettingItem = SerializeUtils.deserialize(taskSetting.getSetting());
+        } catch (IOException | ClassNotFoundException e) {
+            logger.error("饭序列化失败", e);
+            throw new BusinessException("内部错误", 500);
+        }
+
+        List<Long> allowGroupsIDList = taskSettingItem.getAllowGroups();
+
+        if (null != allowGroupsIDList) {
+            var joinedGroupDTOList = groupService.getJoinedGroupList(userID);
+
+            var x = joinedGroupDTOList.stream()
+                    .filter(item -> allowGroupsIDList.contains(item.getGroupID())).toList();
+
+            if (x.size() == 0) {
+                throw new GroupLimitException();
+            }
+        }
 
         // 判断是否已经参加过考勤了
         if (null != taskRecordMapper.getRecordByTaskIDAndUserID(taskID, userID)) {
