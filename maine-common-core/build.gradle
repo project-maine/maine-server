@@ -9,6 +9,7 @@ jar {
 dependencies {
     implementation project(':maine-common-config')
     implementation project(':maine-common-utils')
+    implementation project(':maine-common-constant')
 
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.0'
 

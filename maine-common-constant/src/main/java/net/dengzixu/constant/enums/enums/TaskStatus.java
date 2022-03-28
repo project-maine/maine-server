@@ -1,9 +1,10 @@
-package net.dengzixu.maine.constant.enums;
+package net.dengzixu.constant.enums.enums;
 
-public enum RecordStatus {
+public enum TaskStatus {
     DELETED(127),
+    BANNED(126),
 
-    LATE(1),
+    CLOSED(1),
 
     DEFAULT(0);
 
@@ -19,7 +20,7 @@ public enum RecordStatus {
         return this.value();
     }
 
-    RecordStatus(Integer value) {
+    TaskStatus(Integer value) {
         this.value = value;
     }
 }

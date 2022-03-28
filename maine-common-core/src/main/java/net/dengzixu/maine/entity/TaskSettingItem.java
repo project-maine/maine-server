@@ -8,7 +8,7 @@ import java.util.ArrayList;
 @Data
 public class TaskSettingItem implements java.io.Serializable {
     @java.io.Serial
-    private static final long serialVersionUID = 1413254111655445456L;
+    private static final long serialVersionUID = 114514_114514_114514L;
 
     private ArrayList<Long> allowGroups;
 }

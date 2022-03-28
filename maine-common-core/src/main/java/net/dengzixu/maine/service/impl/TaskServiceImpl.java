@@ -1,6 +1,6 @@
 package net.dengzixu.maine.service.impl;
 
-import net.dengzixu.maine.constant.enums.TaskStatus;
+import net.dengzixu.constant.enums.enums.TaskStatus;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskCode;
 import net.dengzixu.maine.entity.TaskSetting;

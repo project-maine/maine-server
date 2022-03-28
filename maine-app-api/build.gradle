@@ -9,6 +9,7 @@ dependencies {
     implementation project(':maine-common-config')
     implementation project(":maine-common-utils")
     implementation project(':maine-common-core')
+    implementation project(':maine-common-constant')
 
     implementation('org.springframework.boot:spring-boot-starter-web') {
         exclude module: 'spring-boot-starter-tomcat'

@@ -1,7 +1,7 @@
 package net.dengzixu.maine.service.impl;
 
+import net.dengzixu.constant.enums.enums.GroupStatus;
 import net.dengzixu.maine.Group;
-import net.dengzixu.maine.constant.enums.GroupStatus;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;
 import net.dengzixu.maine.entity.dto.JoinedGroupDTO;
 import net.dengzixu.maine.exception.group.*;

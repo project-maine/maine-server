@@ -1,16 +1,12 @@
-package net.dengzixu.maine.constant.enums;
+package net.dengzixu.constant.enums.enums;
 
-public enum GroupStatus {
-    DELETED(127),
-    BANNED(126),
-
-    CLOSED(1),
+public enum GroupNumberStatus {
+    EXITED(1),
 
     DEFAULT(0);
 
 
     private final Integer value;
-
 
     public Integer value() {
         return this.value;
@@ -20,7 +16,9 @@ public enum GroupStatus {
         return this.value();
     }
 
-    GroupStatus(Integer value) {
+
+
+    GroupNumberStatus(Integer value) {
         this.value = value;
     }
 }
