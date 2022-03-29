@@ -293,7 +293,7 @@ public class TaskServiceImpl implements TaskService {
 
         List<Long> allowGroupsIDList = taskSettingItem.getAllowGroups();
 
-        if (null != allowGroupsIDList) {
+        if (null != allowGroupsIDList && allowGroupsIDList.size() > 0) {
             var joinedGroupDTOList = groupService.getJoinedGroupList(userID);
 
             var x = joinedGroupDTOList.stream()
