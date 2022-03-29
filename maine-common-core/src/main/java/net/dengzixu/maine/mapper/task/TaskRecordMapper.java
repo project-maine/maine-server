@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public interface TaskRecordMapper {
     @InsertProvider(type = TaskRecordMapperProvider.class, method = "addRecordSQLBuilder")
-    void addRecord(String serialID,Long taskID, Long userID);
+    void addRecord(String serialID, Long taskID, Long userID,Integer status);
 
     @SelectProvider(type = TaskRecordMapperProvider.class, method = "getRecordByTaskIDAndUserIDSQLBuilder")
     TaskRecord getRecordByTaskIDAndUserID(Long taskID, Long userID);

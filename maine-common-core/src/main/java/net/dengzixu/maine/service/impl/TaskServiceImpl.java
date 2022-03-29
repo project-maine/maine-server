@@ -1,5 +1,6 @@
 package net.dengzixu.maine.service.impl;
 
+import net.dengzixu.constant.enums.enums.RecordStatus;
 import net.dengzixu.constant.enums.enums.TaskStatus;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskCode;
@@ -30,7 +31,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -271,7 +274,7 @@ public class TaskServiceImpl implements TaskService {
             throw new InvalidTokenException();
         }
 
-        // 校验时间戳
+        // 校验 Token 时间戳
         if ((System.currentTimeMillis() - tokenDTO.timestamp()) > 5 * 60 * 1000) {
             logger.warn("Token[{}] 已过期", token);
             throw new InvalidTokenException();
@@ -309,11 +312,19 @@ public class TaskServiceImpl implements TaskService {
             throw new TaskAlreadyTakeException();
         }
 
+        // 判断是否超时考勤
+        Integer status = RecordStatus.DEFAULT.value();
+        LocalDateTime taskEndTime = LocalDateTime.parse(task.getEndTime(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        if (taskEndTime.isBefore(LocalDateTime.now())) {
+            status = RecordStatus.LATE.value();
+        }
+
         // 全部通过后删除Token
         redisUtils.deleteKey("task:token:" + token);
 
 
         // 写入考勤记录
-        taskRecordMapper.addRecord(UUID.randomUUID().toString(), taskID, userID);
+        taskRecordMapper.addRecord(UUID.randomUUID().toString(), taskID, userID, status);
     }
 }

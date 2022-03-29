@@ -8,13 +8,13 @@ public class TaskRecordMapperProvider {
 
     private static final String[] ALL_COLUMN = {"id", "user_id", "task_id", "status", "create_time", "modify_time"};
 
-    public String addRecordSQLBuilder(String serialID, Long taskID, Long userID) {
+    public String addRecordSQLBuilder(String serialID, Long taskID, Long userID, Integer status) {
         return new SQL() {{
             INSERT_INTO(MAINE_ATTENDANCE_RECORD_TABLE_NAME);
             VALUES("serial_id", "#{serialID}");
             VALUES("user_id", "#{userID}");
             VALUES("task_id", "#{taskID}");
-            VALUES("status", RecordStatus.DEFAULT.value().toString());
+            VALUES("status", "#{status}");
         }}.toString();
     }
 
