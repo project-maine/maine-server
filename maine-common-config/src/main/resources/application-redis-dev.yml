@@ -1,0 +1,6 @@
+spring:
+  redis:
+    host: 10.0.10.5
+    port: 6379
+    password: password
+    database: 0

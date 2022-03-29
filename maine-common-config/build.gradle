@@ -6,10 +6,12 @@ jar {
     enabled = true
 }
 
-test {
-    enabled = false
-}
+//test {
+//    enabled = false
+//}
 
 dependencies {
-//    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter'
+
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 }
