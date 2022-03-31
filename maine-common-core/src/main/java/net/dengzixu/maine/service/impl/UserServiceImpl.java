@@ -1,6 +1,7 @@
 package net.dengzixu.maine.service.impl;
 
 import net.dengzixu.constant.Constant;
+import net.dengzixu.constant.enums.UserStatus;
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.exception.common.SMSCodeErrorException;
 import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
@@ -44,12 +45,12 @@ public class UserServiceImpl implements UserService {
         user.setId(new SnowFlake(0, 0).nextId());
         user.setName(username);
         user.setPassword(encryptedPassword);
-        user.setPasswordStatus(1);
+        user.setPasswordStatus(UserStatus.PasswordStatus.SET.value());
         user.setPhone(phone);
-        user.setPhoneStatus(1);
+        user.setPhoneStatus(UserStatus.PhoneStatus.INVALID.value());
         user.setEmail("");
-        user.setEmailStatus(0);
-        user.setStatus(0);
+        user.setEmailStatus(UserStatus.EmailStatus.NOT_SET.value());
+        user.setStatus(UserStatus.DEFAULT.value());
 
         // 写入数据库
         userMapper.add(user);
@@ -94,12 +95,12 @@ public class UserServiceImpl implements UserService {
         createUser.setId(new SnowFlake(0, 0).nextId());
         createUser.setName("用户 " + phone);
         createUser.setPassword(encryptedPassword);
-        createUser.setPasswordStatus(0);
+        createUser.setPasswordStatus(UserStatus.PasswordStatus.UNSET.value());
         createUser.setPhone(phone);
-        createUser.setPhoneStatus(1);
+        createUser.setPhoneStatus(UserStatus.PhoneStatus.VALID.value());
         createUser.setEmail("");
-        createUser.setEmailStatus(0);
-        createUser.setStatus(0);
+        createUser.setEmailStatus(UserStatus.EmailStatus.NOT_SET.value());
+        createUser.setStatus(UserStatus.DEFAULT.value());
 
         // 写入数据库
         userMapper.add(createUser);
