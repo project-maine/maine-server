@@ -1,15 +1,12 @@
-package net.dengzixu.constant.enums.enums;
+package net.dengzixu.constant.enums;
 
-public enum RecordStatus {
-    DELETED(127),
-
-    LATE(1),
+public enum GroupNumberStatus {
+    EXITED(1),
 
     DEFAULT(0);
 
 
     private final Integer value;
-
 
     public Integer value() {
         return this.value;
@@ -19,7 +16,9 @@ public enum RecordStatus {
         return this.value();
     }
 
-    RecordStatus(Integer value) {
+
+
+    GroupNumberStatus(Integer value) {
         this.value = value;
     }
 }

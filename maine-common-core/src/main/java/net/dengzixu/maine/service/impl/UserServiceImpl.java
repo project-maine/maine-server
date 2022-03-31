@@ -86,9 +86,6 @@ public class UserServiceImpl implements UserService {
             return user;
         }
 
-        // 不存在就创建用户
-//        registerByPhone("用户 " + phone, RandomGenerator.nextPassword(), phone);
-
         // 密码加密
         String encryptedPassword = PasswordUtils.encrypt(RandomGenerator.nextPassword(), Constant.PASSWORD_SALT);
 

@@ -1,6 +1,6 @@
 package net.dengzixu.maine.web.api.v1.task;
 
-import net.dengzixu.constant.enums.enums.TaskStatus;
+import net.dengzixu.constant.enums.TaskStatus;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.bo.task.AttendanceCreateBasicBO;
 import net.dengzixu.maine.entity.bo.task.GenerateTokenBO;

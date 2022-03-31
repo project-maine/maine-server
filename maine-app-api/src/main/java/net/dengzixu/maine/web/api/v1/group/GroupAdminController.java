@@ -1,7 +1,7 @@
 package net.dengzixu.maine.web.api.v1.group;
 
-import net.dengzixu.constant.enums.enums.GroupNumberStatus;
-import net.dengzixu.constant.enums.enums.GroupStatus;
+import net.dengzixu.constant.enums.GroupNumberStatus;
+import net.dengzixu.constant.enums.GroupStatus;
 import net.dengzixu.maine.Group;
 import net.dengzixu.maine.entity.bo.group.GroupAddBO;
 import net.dengzixu.maine.entity.dto.GroupNumberDTO;

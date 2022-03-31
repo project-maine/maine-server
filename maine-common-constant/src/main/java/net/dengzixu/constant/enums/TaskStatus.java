@@ -1,4 +1,4 @@
-package net.dengzixu.constant.enums.enums;
+package net.dengzixu.constant.enums;
 
 public enum TaskStatus {
     DELETED(127),

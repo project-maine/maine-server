@@ -1,4 +1,4 @@
-package net.dengzixu.constant.enums.enums;
+package net.dengzixu.constant.enums;
 
 import net.dengzixu.constant.interfaces.IStatus;
 

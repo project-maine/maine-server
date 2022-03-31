@@ -1,7 +1,7 @@
 package net.dengzixu.maine.service.impl;
 
-import net.dengzixu.constant.enums.enums.RecordStatus;
-import net.dengzixu.constant.enums.enums.TaskStatus;
+import net.dengzixu.constant.enums.RecordStatus;
+import net.dengzixu.constant.enums.TaskStatus;
 import net.dengzixu.maine.entity.Task;
 import net.dengzixu.maine.entity.TaskCode;
 import net.dengzixu.maine.entity.TaskSetting;
@@ -31,12 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {

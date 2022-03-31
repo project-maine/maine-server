@@ -1,6 +1,5 @@
 package net.dengzixu.maine.mapper.provider.task;
 
-import net.dengzixu.constant.enums.enums.RecordStatus;
 import org.apache.ibatis.jdbc.SQL;
 
 public class TaskRecordMapperProvider {
