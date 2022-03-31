@@ -1,0 +1,7 @@
+spring:
+  profiles:
+    include:
+      - common-system
+      - admin-api-dev
+      - db-dev
+      - redis-dev
