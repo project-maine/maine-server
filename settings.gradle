@@ -1,5 +1,6 @@
 rootProject.name = 'maine'
 
+include 'maine-common-entity'
 include 'maine-common-constant'
 include 'maine-common-config'
 include 'maine-common-utils'

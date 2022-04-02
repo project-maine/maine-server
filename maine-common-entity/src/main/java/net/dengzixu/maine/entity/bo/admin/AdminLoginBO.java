@@ -1,4 +1,4 @@
-package net.dengzixu.maine.entity.bo;
+package net.dengzixu.maine.entity.bo.admin;
 
 import javax.validation.constraints.NotBlank;
 
