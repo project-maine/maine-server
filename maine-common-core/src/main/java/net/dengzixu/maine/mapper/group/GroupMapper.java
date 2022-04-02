@@ -24,4 +24,7 @@ public interface GroupMapper {
 
     @UpdateProvider(type = GroupMapperProvider.class, method = "modifyGroupStatusSQLBuilder")
     void modifyGroupStatus(Long groupID, Integer status);
+
+    @SelectProvider(type = GroupMapperProvider.class, method = "listAllGroupSQLBuilder")
+    List<Group> listAllGroup();
 }

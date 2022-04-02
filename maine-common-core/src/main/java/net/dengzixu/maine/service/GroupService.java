@@ -90,4 +90,6 @@ public interface GroupService {
     List<JoinedGroupDTO> getJoinedGroupList(Long userID);
 
     Group getAndValidate(Long groupID);
+
+    List<Group> listAllGroup();
 }

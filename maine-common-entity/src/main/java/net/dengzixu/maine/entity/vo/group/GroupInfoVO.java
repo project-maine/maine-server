@@ -2,6 +2,7 @@ package net.dengzixu.maine.entity.vo.group;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
 public record GroupInfoVO(Long id,
                           String name,
                           String description,

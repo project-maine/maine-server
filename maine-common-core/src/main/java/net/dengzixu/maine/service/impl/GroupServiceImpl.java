@@ -128,4 +128,9 @@ public class GroupServiceImpl implements GroupService {
 
         return group;
     }
+
+    @Override
+    public List<Group> listAllGroup() {
+        return groupMapper.listAllGroup();
+    }
 }

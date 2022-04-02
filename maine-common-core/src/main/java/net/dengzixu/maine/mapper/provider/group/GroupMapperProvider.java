@@ -43,4 +43,11 @@ public class GroupMapperProvider {
             WHERE("id = #{groupID}");
         }}.toString();
     }
+
+    public String listAllGroupSQLBuilder() {
+        return new SQL() {{
+            SELECT(ALL_COLUMNS);
+            FROM(TABLE_NAME);
+        }}.toString();
+    }
 }
