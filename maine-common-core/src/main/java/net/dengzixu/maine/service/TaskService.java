@@ -57,6 +57,8 @@ public interface TaskService {
      */
     List<Task> getTaskListByUserID(Long userID);
 
+    List<Task> getAllTask();
+
     /**
      * 参加考勤
      *

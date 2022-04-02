@@ -34,6 +34,13 @@ public class TaskMapperProvider {
         }}.toString();
     }
 
+    public String getAllTaskSQLBuilder() {
+        return new SQL() {{
+            SELECT(ALL_COLUMNS);
+            FROM(MAINE_ATTENDANCE_TASK_TABLE_NAME);
+        }}.toString();
+    }
+
     public String modifyTaskStatusSQLBuilder(Long taskID, Integer status) {
         return new SQL() {{
             UPDATE(MAINE_ATTENDANCE_TASK_TABLE_NAME);

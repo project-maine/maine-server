@@ -43,4 +43,11 @@ public class UserMapperProvider {
             WHERE("id = #{id}");
         }}.toString();
     }
+
+    public String listUserSQLBuilder(){
+        return new SQL() {{
+            SELECT(ALL_COLUMN);
+            FROM(MAINE_USER_TABLE_NAME);
+        }}.toString();
+    }
 }

@@ -5,6 +5,8 @@ import net.dengzixu.maine.exception.common.SMSCodeErrorException;
 import net.dengzixu.maine.exception.user.PhoneAlreadyUsedException;
 import net.dengzixu.maine.exception.user.UserNotFoundException;
 
+import java.util.List;
+
 public interface UserService {
     /**
      * 注册
@@ -41,6 +43,13 @@ public interface UserService {
      * @return User
      */
     User getUserByID(Long id);
+
+    /**
+     * 获取所有用户
+     *
+     * @return List<User>
+     */
+    List<User> getAllUser();
 
     /**
      * 验证用户是否有效

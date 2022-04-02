@@ -1,7 +1,7 @@
 package net.dengzixu.maine.web.api.v1.auth;
 
 import net.dengzixu.maine.entity.Admin;
-import net.dengzixu.maine.entity.bo.AdminLoginBO;
+import net.dengzixu.maine.entity.bo.admin.AdminLoginBO;
 import net.dengzixu.maine.model.APIResponseMap;
 import net.dengzixu.maine.service.AdminService;
 import net.dengzixu.maine.utils.JWTUtils;

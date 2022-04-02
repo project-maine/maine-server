@@ -130,6 +130,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public List<Task> getAllTask() {
+
+        return taskMapper.getAllTask();
+    }
+
+    @Override
     public void take(Long taskID, Long takeUserID, String token) {
         this._take(taskID, takeUserID, token);
     }

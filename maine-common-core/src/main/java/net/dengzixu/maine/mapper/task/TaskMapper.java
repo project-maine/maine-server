@@ -22,6 +22,9 @@ public interface TaskMapper {
     @SelectProvider(type = TaskMapperProvider.class, method = "getTaskListByUserIDSQLBuilder")
     List<Task> getTaskListByUserID(Long userID);
 
+    @SelectProvider(type = TaskMapperProvider.class,method = "getAllTaskSQLBuilder")
+    List<Task> getAllTask();
+
     @UpdateProvider(type = TaskMapperProvider.class, method = "modifyTaskStatusSQLBuilder")
     void modifyTaskStatus(Long taskID, Integer status);
 }

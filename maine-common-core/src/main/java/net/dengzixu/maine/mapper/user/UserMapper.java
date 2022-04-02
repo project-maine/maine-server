@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.SelectProvider;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Mapper
 @Repository
 public interface UserMapper {
@@ -26,4 +28,7 @@ public interface UserMapper {
 
     @SelectProvider(type = UserMapperProvider.class, method = "getByIDSQLBuilder")
     User getByID(Long id);
+
+    @SelectProvider(type = UserMapperProvider.class,method = "listUserSQLBuilder")
+    List<User> listUser();
 }
