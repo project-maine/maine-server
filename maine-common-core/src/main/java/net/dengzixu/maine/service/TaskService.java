@@ -57,6 +57,11 @@ public interface TaskService {
      */
     List<Task> getTaskListByUserID(Long userID);
 
+    /**
+     * 获取所有任务
+     *
+     * @return List<Task>
+     */
     List<Task> getAllTask();
 
     /**
@@ -92,6 +97,8 @@ public interface TaskService {
      * @param status 修改后的状态
      */
     void modifyTaskStatus(Long taskID, Long userID, Integer status);
+
+    void modifyTaskStatus(Long taskID, Integer status);
 
     /**
      * 判断 Task 的状态

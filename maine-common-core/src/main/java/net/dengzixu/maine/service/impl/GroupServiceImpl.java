@@ -113,6 +113,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public void changeStatus(Long groupID, Integer status) {
+        Group group = getAndValidate(groupID);
+
+        groupMapper.modifyGroupStatus(group.getId(), status);
+    }
+
+    @Override
     public List<JoinedGroupDTO> getJoinedGroupList(Long userID) {
         return groupNumberMapper.getJoinedGroupList(userID);
     }

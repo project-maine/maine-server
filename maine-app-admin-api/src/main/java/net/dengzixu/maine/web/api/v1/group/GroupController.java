@@ -1,6 +1,7 @@
 package net.dengzixu.maine.web.api.v1.group;
 
 import net.dengzixu.constant.enums.GroupStatus;
+import net.dengzixu.constant.enums.TaskStatus;
 import net.dengzixu.maine.Group;
 import net.dengzixu.maine.entity.vo.group.GroupInfoListVO;
 import net.dengzixu.maine.entity.vo.group.GroupInfoVO;
@@ -11,10 +12,7 @@ import net.dengzixu.maine.service.GroupService;
 import net.dengzixu.maine.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -58,5 +56,26 @@ public class GroupController {
 
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", groupInfoListVO));
+    }
+
+    @RequestMapping(value = "/{taskID}/{operate}", method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity<APIResponseMap> modifyStatus(@RequestHeader("Authorization") String authorization,
+                                                       @PathVariable Long taskID,
+                                                       @PathVariable String operate) {
+
+        long id = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+        adminService.validate(id);
+
+        switch (operate) {
+            case "ban" -> groupService.changeStatus(taskID, GroupStatus.BANNED.value());
+            case "delete" -> groupService.changeStatus(taskID, GroupStatus.DELETED.value());
+            case "unban", "pass" -> groupService.changeStatus(taskID, GroupStatus.DEFAULT.value());
+            default -> {
+                return ResponseEntity.status(400).body(APIResponseMap.FAILED(-20, "未知操作"));
+            }
+        }
+
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 }

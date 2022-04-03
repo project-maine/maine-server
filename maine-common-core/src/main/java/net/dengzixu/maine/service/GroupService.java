@@ -82,6 +82,14 @@ public interface GroupService {
     void delete(Long groupID, Long userID);
 
     /**
+     * 修改小组状态
+     *
+     * @param groupID 小组 ID
+     * @param status  状态
+     */
+    void changeStatus(Long groupID, Integer status);
+
+    /**
      * 获取加入的小组列表
      *
      * @param userID 用户 ID

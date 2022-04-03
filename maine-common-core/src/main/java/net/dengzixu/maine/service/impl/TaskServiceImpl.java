@@ -131,7 +131,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> getAllTask() {
-
         return taskMapper.getAllTask();
     }
 
@@ -195,6 +194,13 @@ public class TaskServiceImpl implements TaskService {
         }
 
         taskMapper.modifyTaskStatus(taskID, status);
+    }
+
+    @Override
+    public void modifyTaskStatus(Long taskID, Integer status) {
+        Task task = this.validateAndGet(taskID);
+
+        taskMapper.modifyTaskStatus(task.getId(), status);
     }
 
     @Override

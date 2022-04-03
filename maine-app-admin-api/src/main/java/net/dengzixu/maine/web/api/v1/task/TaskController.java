@@ -11,10 +11,7 @@ import net.dengzixu.maine.service.TaskService;
 import net.dengzixu.maine.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -52,5 +49,26 @@ public class TaskController {
                 });
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", taskListVO));
+    }
+
+    @RequestMapping(value = "/{taskID}/{operate}", method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity<APIResponseMap> modifyStatus(@RequestHeader("Authorization") String authorization,
+                                                       @PathVariable Long taskID,
+                                                       @PathVariable String operate) {
+
+        long id = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+        adminService.validate(id);
+
+        switch (operate) {
+            case "ban" -> taskService.modifyTaskStatus(taskID, TaskStatus.BANNED.value());
+            case "delete" -> taskService.modifyTaskStatus(taskID, TaskStatus.DELETED.value());
+            case "unban", "pass" -> taskService.modifyTaskStatus(taskID, TaskStatus.DEFAULT.value());
+            default -> {
+                return ResponseEntity.status(400).body(APIResponseMap.FAILED(-20, "未知操作"));
+            }
+        }
+
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 }
