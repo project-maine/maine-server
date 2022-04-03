@@ -6,3 +6,7 @@ maine-config:
   aliyun-sms:
     access-key-id: <AccessKeyId>
     access-secret: <AccessSecret>
+
+  jwt:
+    token: <token>
+    ttl: 604800
