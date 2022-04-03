@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class AdminServiceImpl implements AdminService {
-
-
     private final AdminMapper adminMapper;
 
     @Autowired
@@ -24,7 +22,18 @@ public class AdminServiceImpl implements AdminService {
     public Admin login(String name, String password) {
         String encryptPassword = PasswordUtils.encrypt(password, Constant.ADMIN_PASSWORD_SALT);
 
-        Admin admin = adminMapper.get(name, encryptPassword);
+        Admin admin = adminMapper.login(name, encryptPassword);
+
+        if (null == admin) {
+            throw new UserNotFoundException();
+        }
+
+        return admin;
+    }
+
+    @Override
+    public Admin validate(Long id) {
+        Admin admin = adminMapper.getByID(id);
 
         if (null == admin) {
             throw new UserNotFoundException();

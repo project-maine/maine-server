@@ -9,6 +9,9 @@ import org.springframework.stereotype.Repository;
 @Mapper
 @Repository
 public interface AdminMapper {
-    @SelectProvider(value = AdminMapperProvider.class, method = "getSQLBuilder")
-    Admin get(String name, String password);
+    @SelectProvider(value = AdminMapperProvider.class, method = "loginSQLBuilder")
+    Admin login(String name, String password);
+
+    @SelectProvider(value = AdminMapperProvider.class, method = "getByIDSQLBuilder")
+    Admin getByID(Long id);
 }

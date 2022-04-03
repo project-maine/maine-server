@@ -9,13 +9,21 @@ public class AdminMapperProvider {
             "id", "name", "password", "create_time", "modify_time"
     };
 
-    public String getSQLBuilder(String name, String password) {
+    public String loginSQLBuilder(String name, String password) {
         return new SQL() {{
             SELECT(ALL_COLUMNS);
             FROM(MAINE_ADMIN_TABLE_NAME);
             WHERE("name = #{name}");
             AND();
             WHERE("password = #{password}");
+        }}.toString();
+    }
+
+    public String getByIDSQLBuilder(Long id){
+        return new SQL() {{
+            SELECT(ALL_COLUMNS);
+            FROM(MAINE_ADMIN_TABLE_NAME);
+            WHERE("id = #{id}");
         }}.toString();
     }
 }
