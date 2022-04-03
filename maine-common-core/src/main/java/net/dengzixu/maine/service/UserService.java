@@ -58,4 +58,12 @@ public interface UserService {
      * @return 有效返回 true, 无效返回 false
      */
     Boolean validate(Long id);
+
+    /**
+     * 修改状态
+     *
+     * @param id     用户 ID
+     * @param status 状态
+     */
+    void changeStatus(Long id, Integer status);
 }

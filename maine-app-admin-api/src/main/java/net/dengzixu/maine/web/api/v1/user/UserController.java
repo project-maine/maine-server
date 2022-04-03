@@ -1,5 +1,6 @@
 package net.dengzixu.maine.web.api.v1.user;
 
+import net.dengzixu.constant.enums.GroupStatus;
 import net.dengzixu.constant.enums.UserStatus;
 import net.dengzixu.maine.entity.User;
 import net.dengzixu.maine.entity.vo.user.UserListVO;
@@ -11,10 +12,7 @@ import net.dengzixu.maine.service.UserService;
 import net.dengzixu.maine.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -59,5 +57,26 @@ public class UserController {
 
 
         return ResponseEntity.ok(APIResponseMap.SUCCEEDED("", userListVO));
+    }
+
+    @RequestMapping(value = "/{taskID}/{operate}", method = {RequestMethod.POST, RequestMethod.PUT})
+    public ResponseEntity<APIResponseMap> modifyStatus(@RequestHeader("Authorization") String authorization,
+                                                       @PathVariable Long taskID,
+                                                       @PathVariable String operate) {
+
+        long id = jwtUtils.decode(authorization).orElseThrow(TokenExpiredException::new);
+        adminService.validate(id);
+
+        switch (operate) {
+            case "ban" -> userService.changeStatus(taskID, UserStatus.BANNED.value());
+            case "delete" -> userService.changeStatus(taskID, UserStatus.DELETED.value());
+            case "unban", "pass" -> userService.changeStatus(taskID, UserStatus.DEFAULT.value());
+            default -> {
+                return ResponseEntity.status(400).body(APIResponseMap.FAILED(-20, "未知操作"));
+            }
+        }
+
+
+        return ResponseEntity.ok(APIResponseMap.SUCCEEDED(""));
     }
 }

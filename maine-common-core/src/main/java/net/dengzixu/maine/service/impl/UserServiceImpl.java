@@ -144,4 +144,11 @@ public class UserServiceImpl implements UserService {
 
         return true;
     }
+
+    @Override
+    public void changeStatus(Long id, Integer status) {
+        validate(id);
+
+        userMapper.modifyStatus(id, status);
+    }
 }

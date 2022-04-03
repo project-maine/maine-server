@@ -44,10 +44,18 @@ public class UserMapperProvider {
         }}.toString();
     }
 
-    public String listUserSQLBuilder(){
+    public String listUserSQLBuilder() {
         return new SQL() {{
             SELECT(ALL_COLUMN);
             FROM(MAINE_USER_TABLE_NAME);
+        }}.toString();
+    }
+
+    public String modifyStatusSQLBuilder(Long id, Integer status) {
+        return new SQL() {{
+            UPDATE(MAINE_USER_TABLE_NAME);
+            SET("status = #{status}");
+            WHERE("id = #{id}");
         }}.toString();
     }
 }
